@@ -23,7 +23,8 @@
       },
       "externalBin": [],
       "icon": [
-        "icons/logo.ico"
+        "icons/logo.ico",
+        "icons/logo.png"
       ],
       "identifier": "com.tauri.dev",
       "longDescription": "",

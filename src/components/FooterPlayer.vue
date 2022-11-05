@@ -6,7 +6,8 @@
     <div id="mainPlayer">
         <img src="https://discussions.apple.com/content/attachment/592590040" id="albumCover">
         <div id="buttonsAndProgress">
-            <progress min="0" max="100" value="53" id="musicProgressBar"></progress>
+            <label id="trackStartLength">1:22<progress max="100" value="35" id="musicProgressBar"></progress><label
+                    id="trackEndLength">3:53</label> </label>
             <div id="playerButtons">
                 <font-awesome-icon icon="fa-solid fa-shuffle" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-backward" size="sm" color="#505050" class="footerPlayerButton" />
@@ -105,5 +106,39 @@
 
 #musicProgressBar {
     width: 450px;
+    height: 5px;
+    margin: 0 15px 0 15px;
+    background: #272727;
+    border-radius: 500px;
+    border: none;
+}
+
+#musicProgressBar::-webkit-progress-bar {
+    background-color: #272727;
+    border-radius: 500px;
+}
+
+progress::-webkit-progress-value {
+    background-color: rgb(168, 249, 255);
+    ;
+    border-radius: 500px;
+}
+
+#musicProgressBar::-moz-progress-bar {
+    background-color: rgb(168, 249, 255);
+    border-radius: 500px;
+}
+
+#trackStartLength {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+    user-select: none;
 }
 </style>
