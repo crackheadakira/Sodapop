@@ -2,18 +2,20 @@
 import AlbumInfo from './components/AlbumInfo.vue'
 import TrackList from './components/TrackList.vue'
 import HorizontalMenu from './components/HorizontalMenu.vue'
+import FooterPlayer from './components/FooterPlayer.vue'
 </script>
 
 <template>
   <AlbumInfo :albumInfo="{
     artistName: 'Joji',
-    albumName: 'Nectar',
-    releaseYear: '2020',
-    albumCover: 'https://lastfm.freetls.fastly.net/i/u/770x0/71da7e08ec27c0c83b1133c0e6d1ca51.jpg#71da7e08ec27c0c83b1133c0e6d1ca51'
+    albumName: 'SMITHEREENS',
+    releaseYear: '2022',
+    albumCover: 'https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6'
   }" />
   <HorizontalMenu />
   <TrackList
-    :TrackList='["Ew", "MODUS", "Tick", "Tock", "Daylight", "Upgrade", "Gimme Love", "Run", "Sanctuary", "High Hopes (feat. Omar Apollo)", "NITROUS", "Pretty Boy (feat. Lil Yachty)", "Normal People (feat. rel brown)", "Afterthought", "Mr. Hollywood", "777", "Reanimator (feat. Yves Tumor)", "Like You Do", "Your Man"]' />
+    :TrackList='[{ trackName: "Glimpse of Us", length: "3:53", }, { trackName: "Feeling Like The End", length: "1:42", }, { trackName: "Die For You", length: "3:31", }, { trackName: "Before The Day Is Over", length: "3:33" }, { trackName: "Dissolve", length: "2:57" }, { trackName: "Night Rider", length: "2:07" }, { trackName: "BLAHBLAHBLAH DEMO", length: "2:22" }, { trackName: "YUKON (INTERLUDE)", length: "2:21" }, { trackName: "1AM Freestyle", length: "1:53" }]' />
+  <FooterPlayer />
 </template>
 
 <style scoped>

@@ -5,9 +5,8 @@
 <template>
     <div id="main">
         <div id="menuBar">
-            <div id="trackList">Track List</div>
-            <div id="trackInfo">Track Info</div>
-            <div id="lyrics">Lyrics</div>
+            <div id="songs" data-active="true">Songs</div>
+            <div id="songInfo" data-active="false">Song Info</div>
         </div>
     </div>
 </template>
@@ -21,29 +20,36 @@
 }
 
 #menuBar {
-    height: 35px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
     background-color: #282828;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.9rem;
-    border-radius: 500px;
     width: fit-content;
     padding: 2px;
+    border-radius: 500px;
 }
 
 #menuBar div {
-    padding-left: 10px;
-    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px 5px 10px;
     transition: 250ms ease;
+    height: 100%;
+    border-radius: 500px;
 }
 
 #menuBar div:hover {
     background-color: white;
     color: #282828;
-    border-radius: 500px;
     cursor: pointer;
+}
+
+#menuBar div[data-active="true"] {
+    background-color: white;
+    color: #282828;
 }
 </style>

@@ -9,24 +9,19 @@ defineProps({
 </script>
 
 <template>
-    <div id="main" :v-if="TrackList.length > 0">
+    <div v-if="TrackList.length > 0">
         <ol id="tracks">
             <li v-for="Track in TrackList">
-                {{ Track }}
+                {{ Track.trackName }}
+                <span>{{ Track.length }}</span>
             </li>
         </ol>
     </div>
 </template>
 
 <style scoped>
-#main {
-    width: 100%;
-    height: 100%;
-}
-
 #tracks {
     max-height: 500px;
-    width: 90vw;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -34,12 +29,13 @@ defineProps({
 ol {
     list-style: none;
     counter-reset: item;
-    backface-visibility: hidden
+    backface-visibility: hidden;
+    margin-bottom: 0px;
 }
 
 li {
     counter-increment: item;
-    width: 97%;
+    width: 98%;
     border-radius: 6px;
     margin: 1px;
     margin-top: 8px;
@@ -49,6 +45,10 @@ li {
     border: 2px solid #404040;
     border-color: transparent;
     font-weight: 500;
+}
+
+li span {
+    float: right;
 }
 
 li:hover {

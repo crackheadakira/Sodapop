@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <div id="main">
+  <div id="mainBody">
     <div id="album">
       <div v-if="albumInfo.albumCover">
         <img :src="albumInfo.albumCover" id="albumCover">
@@ -36,8 +36,10 @@ p {
   color: #bb1c24;
 }
 
-#main {
-  width: calc(100% - 20px);
+#mainBody {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 15px;
 }
 
 #album {
@@ -54,10 +56,9 @@ p {
 }
 
 #albumCover {
-  height: 250px;
+  height: 170px;
   border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border: 1px solid rgba(231, 135, 121, 0.3);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .smallThumbnail {
