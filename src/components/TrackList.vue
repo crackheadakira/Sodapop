@@ -1,6 +1,4 @@
 <script setup>
-import { track } from '@vue/reactivity';
-
 defineProps({
     TrackList: {
         type: Array,
@@ -11,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-    <div id="main" :v-if="TrackList">
+    <div id="main" :v-if="TrackList.length > 0">
         <ol id="tracks">
             <li v-for="Track in TrackList">
                 {{ Track }}
@@ -36,6 +34,7 @@ defineProps({
 ol {
     list-style: none;
     counter-reset: item;
+    backface-visibility: hidden
 }
 
 li {
@@ -43,19 +42,18 @@ li {
     width: 97%;
     border-radius: 6px;
     margin: 1px;
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
     padding: 10px;
     transition: 150ms ease;
-    border: 0px solid #404040;
-    will-change: transform;
-    font-weight: 600;
+    border: 2px solid #404040;
+    border-color: transparent;
+    font-weight: 500;
 }
 
 li:hover {
     border: 2px solid #404040;
     background-color: #282828;
-    transform: translateY(-3px);
     cursor: pointer;
 }
 

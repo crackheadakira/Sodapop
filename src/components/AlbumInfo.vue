@@ -8,17 +8,23 @@ defineProps({
 </script>
 
 <template>
-  <div id="album">
-    <div v-if="albumInfo.albumCover">
-      <img :src="albumInfo.albumCover" id="albumCover">
-    </div>
-    <div id="albumInfo">
-      <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
-      <p>{{ albumInfo.albumMainGenre }} • {{ albumInfo.releaseYear }}</p>
+  <div id="main">
+    <div id="album">
+      <div v-if="albumInfo.albumCover">
+        <img :src="albumInfo.albumCover" id="albumCover">
+      </div>
+      <div id="albumInfo">
+        <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
+        <p>{{ albumInfo.releaseYear }}</p>
 
-      <div id="mainButtons">
-        <button class="danger-button">Play</button>
-        <button class="danger-button">Shuffle</button>
+        <div id="mainButtons">
+          <button class="danger-button">
+            <font-awesome-icon icon="fa-solid fa-play" /> Play
+          </button>
+          <button class="danger-button">
+            <font-awesome-icon icon="fa-solid fa-shuffle" /> Shuffle
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -30,10 +36,13 @@ p {
   color: #bb1c24;
 }
 
+#main {
+  width: calc(100% - 20px);
+}
+
 #album {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   height: fit-content;
   width: 100%;
@@ -45,7 +54,7 @@ p {
 }
 
 #albumCover {
-  height: 300px;
+  height: 250px;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: 1px solid rgba(231, 135, 121, 0.3);
@@ -72,11 +81,11 @@ p {
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: 350ms ease;
+  transition: 250ms ease;
 }
 
 .danger-button:hover {
-  background-color: #bb1c24;
+  background-color: #a71a21;
 }
 
 .title {

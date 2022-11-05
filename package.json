@@ -10,6 +10,10 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
     "feather-icons": "^4.29.0",
     "vue": "^3.2.41",
     "vue-feather": "^2.0.0"
