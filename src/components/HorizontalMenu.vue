@@ -1,4 +1,18 @@
 <script setup>
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    const menuBarDisableds = document.querySelectorAll('#menuBar div[data-active="false"]');
+    for (let menuBarDisabled of menuBarDisableds) {
+        const menuBarEnabled = document.querySelector('#menuBar div[data-active="true"]');
+        menuBarDisabled.addEventListener('mouseover', () => {
+            menuBarEnabled.dataset.active = "semiactive";
+        });
+        menuBarDisabled.addEventListener('mouseout', () => {
+            menuBarEnabled.dataset.active = "true";
+        });
+    }
+});
 
 </script>
 
@@ -7,6 +21,7 @@
         <div id="menuBar">
             <div id="songs" data-active="true">Songs</div>
             <div id="songInfo" data-active="false">Song Info</div>
+            <div id="moreByArtist" data-active="false">More by Joji</div>
         </div>
     </div>
 </template>
@@ -40,16 +55,24 @@
     transition: 250ms ease;
     height: 100%;
     border-radius: 500px;
-}
-
-#menuBar div:hover {
-    background-color: white;
-    color: #282828;
     cursor: pointer;
 }
 
-#menuBar div[data-active="true"] {
-    background-color: white;
+#menuBar div:hover {
+    background: white;
     color: #282828;
+    border-radius: 500px;
+}
+
+#menuBar div[data-active="true"] {
+    background: white;
+    color: #282828;
+    border-radius: 500px;
+}
+
+#menuBar div[data-active="semiactive"] {
+    background: #222222;
+    color: white;
+    border-radius: 500px;
 }
 </style>

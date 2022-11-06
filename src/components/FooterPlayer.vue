@@ -79,6 +79,11 @@
     align-items: center;
 }
 
+#songInfo * {
+    user-select: none;
+    cursor: pointer;
+}
+
 #songInfoText {
     display: flex;
     justify-content: center;
@@ -87,10 +92,16 @@
 
 #songInfoText p {
     margin: 0;
+    width: fit-content;
     max-width: 200px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+#songInfoText p:hover {
+    text-decoration: underline;
+    transform: scale(1.01);
 }
 
 #songArtist {
