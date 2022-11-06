@@ -21,7 +21,6 @@ defineProps({
 
 <style scoped>
 #tracks {
-    max-height: 500px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
