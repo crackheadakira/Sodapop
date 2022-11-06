@@ -1,15 +1,26 @@
 <script setup>
-import { ref } from 'vue';
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import { ref, onMounted } from 'vue';
 import { usePlayerStore } from '../stores/player';
 
 const player_store = usePlayerStore();
 
-const playStateIcon = ref(player_store.isPlaying ? faPause : faPlay);
-function updateIcon() {
+const playStateIcon = ref(player_store.isPlaying ? "fa-pause" : "fa-play");
+function playUpdateIcon() {
     player_store.togglePlay();
-    playStateIcon.value = player_store.isPlaying ? faPause : faPlay;
+    playStateIcon.value = player_store.isPlaying ? "fa-pause" : "fa-play";
 }
+
+function shuffleUpdateIcon() {
+
+}
+
+function repeatUpdateIcon() {
+
+}
+
+onMounted(() => {
+
+});
 </script>
 
 <template>
@@ -23,19 +34,21 @@ function updateIcon() {
             </div>
         </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">1:36<progress max="100" value="67" id="musicProgressBar"></progress><label
+            <label id="trackStartLength">1:36<progress max="142" value="96" id="musicProgressBar"></progress><label
                     id="trackEndLength">2:22</label> </label>
             <div id="playerButtons">
-                <font-awesome-icon icon="fa-solid fa-shuffle" size="sm" color="#505050" class="footerPlayerButton" />
-                <font-awesome-icon icon="fa-solid fa-backward" size="sm" color="#505050" class="footerPlayerButton" />
-                <font-awesome-icon @click="updateIcon()" :icon="playStateIcon" size="lg" class="footerPlayerButton"
-                    id="mainPlay" />
-                <font-awesome-icon icon="fa-solid fa-forward" size="sm" color="#505050" class="footerPlayerButton" />
-                <font-awesome-icon icon="fa-solid fa-repeat" size="sm" color="#505050" class="footerPlayerButton" />
+                <i @click="player_store.toggleShuffle()"
+                    class="fa-solid fa-shuffle fa-sm footerPlayerButton activePlayerButton" id="shuffleButton"></i>
+                <i class="fa-solid fa-backward fa-sm footerPlayerButton"></i>
+                <i @click="playUpdateIcon()" :class="[playStateIcon]" class="fa-solid footerPlayerButton fa-fw"
+                    id="mainPlayButton"></i>
+                <i class="fa-solid fa-forward fa-sm footerPlayerButton"></i>
+                <i @click="player_store.toggleRepeat()"
+                    class="fa-solid fa-repeat fa-sm footerPlayerButton activePlayerButton" id="repeatButton"></i>
             </div>
         </div>
         <div id="volumeBar">
-            <font-awesome-icon icon="fa-solid fa-volume-low" />
+            <i class="fa-solid fa-volume-low"></i>
             <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
         </div>
     </div>
@@ -44,23 +57,39 @@ function updateIcon() {
 <style scoped>
 #mainPlayer {
     position: fixed;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    justify-content: center;
     align-items: center;
-    height: 99px;
+    height: fit-content;
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
     bottom: 0;
-    left: 0;
 }
 
 #playerButtons {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     gap: 20px;
+}
+
+.footerPlayerButton {
+    user-select: none;
+}
+
+.activePlayerButton {
+    color: white;
+    text-emphasis-style: dot;
+    text-emphasis-position: under left;
+    -webkit-text-emphasis-style: dot;
+    -webkit-text-emphasis-position: under;
+}
+
+.disablePlayerButton {
+    color: #505050;
 }
 
 #buttonsAndProgress {
@@ -69,14 +98,6 @@ function updateIcon() {
     justify-content: center;
     align-items: center;
     gap: 10px;
-}
-
-.footerPlayerButton:hover {
-    transform: scale(1.1);
-}
-
-.footerPlayerButton:active {
-    transform: scale(1);
 }
 
 #albumCover {
@@ -120,7 +141,7 @@ function updateIcon() {
 
 #volumeBar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 8px;
     margin: 32px;
@@ -155,7 +176,7 @@ function updateIcon() {
 }
 
 #musicProgressBar {
-    width: 450px;
+    width: 400px;
     height: 5px;
     margin: 0 15px 0 15px;
     background: #272727;

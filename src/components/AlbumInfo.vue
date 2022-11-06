@@ -19,10 +19,10 @@ defineProps({
 
         <div id="mainButtons">
           <button class="danger-button">
-            <font-awesome-icon icon="fa-solid fa-play" /> Play
+            <i class="fa-solid fa-play"></i> Play
           </button>
           <button class="danger-button">
-            <font-awesome-icon icon="fa-solid fa-shuffle" /> Shuffle
+            <i class="fa-solid fa-shuffle"></i> Shuffle
           </button>
         </div>
       </div>
