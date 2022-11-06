@@ -6,6 +6,7 @@ export const usePlayerStore = defineStore({
         isPlaying: false,
         isShuffling: false,
         isRepeating: false,
+        currentTime: 0,
     }),
     actions: {
         toggleShuffle() {
@@ -17,5 +18,11 @@ export const usePlayerStore = defineStore({
         togglePlay() {
             this.isPlaying = !this.isPlaying;
         },
+        updateTime(time) {
+            this.currentTime = time;
+        }
     },
+    persist: {
+        enabled: true
+    }
 });

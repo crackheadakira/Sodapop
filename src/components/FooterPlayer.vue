@@ -3,24 +3,25 @@ import { ref, onMounted } from 'vue';
 import { usePlayerStore } from '../stores/player';
 
 const player_store = usePlayerStore();
-
 const playStateIcon = ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 function playUpdateIcon() {
     player_store.togglePlay();
     playStateIcon.value = player_store.isPlaying ? "fa-pause" : "fa-play";
 }
 
-function shuffleUpdateIcon() {
-
+function convertTime(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 }
 
-function repeatUpdateIcon() {
-
+function updateTime(time) {
+    player_store.updateTime(time);
+    trackCurrentTime.value = convertTime(time);
 }
 
-onMounted(() => {
+const trackCurrentTime = ref(convertTime(player_store.currentTime));
 
-});
 </script>
 
 <template>
@@ -34,22 +35,24 @@ onMounted(() => {
             </div>
         </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">1:36<progress max="142" value="96" id="musicProgressBar"></progress><label
-                    id="trackEndLength">2:22</label> </label>
+            <label id="trackStartLength">{{ trackCurrentTime }}<input @change="updateTime($event.target.value)"
+                    type="range" max="142" :value=player_store.currentTime id="musicProgressBar"><label
+                    id="trackEndLength">2:22</label>
+            </label>
             <div id="playerButtons">
-                <i @click="player_store.toggleShuffle()"
-                    class="fa-solid fa-shuffle fa-sm footerPlayerButton activePlayerButton" id="shuffleButton"></i>
+                <i @click="player_store.toggleShuffle()" class="fa-solid fa-shuffle fa-sm footerPlayerButton"
+                    id="shuffleButton" :class="{ activePlayerButton: player_store.isShuffling }"></i>
                 <i class="fa-solid fa-backward fa-sm footerPlayerButton"></i>
                 <i @click="playUpdateIcon()" :class="[playStateIcon]" class="fa-solid footerPlayerButton fa-fw"
                     id="mainPlayButton"></i>
                 <i class="fa-solid fa-forward fa-sm footerPlayerButton"></i>
-                <i @click="player_store.toggleRepeat()"
-                    class="fa-solid fa-repeat fa-sm footerPlayerButton activePlayerButton" id="repeatButton"></i>
+                <i @click="player_store.toggleRepeat()" class="fa-solid fa-repeat fa-sm footerPlayerButton"
+                    :class="{ activePlayerButton: player_store.isRepeating }" id="repeatButton"></i>
             </div>
         </div>
         <div id="volumeBar">
             <i class="fa-solid fa-volume-low"></i>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            <input type="range" min="1" max="100" value="50" class="slider" id="volumeSlider">
         </div>
     </div>
 </template>
@@ -62,7 +65,6 @@ onMounted(() => {
     grid-template-rows: 1fr;
     justify-content: center;
     align-items: center;
-    height: fit-content;
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
@@ -74,21 +76,24 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     gap: 20px;
+    height: 21px;
 }
 
 .footerPlayerButton {
     user-select: none;
 }
 
-.activePlayerButton {
-    color: white;
+.activePlayerButton::before {
+    position: relative;
+    top: 3.5px;
     text-emphasis-style: dot;
     text-emphasis-position: under left;
     -webkit-text-emphasis-style: dot;
     -webkit-text-emphasis-position: under;
+    user-select: none;
 }
 
-.disablePlayerButton {
+#shuffleButton .disablePlayerButton {
     color: #505050;
 }
 
@@ -189,7 +194,7 @@ onMounted(() => {
     border-radius: 500px;
 }
 
-progress::-webkit-progress-value {
+#musicProgressBar::-webkit-progress-value {
     background-color: rgb(168, 249, 255);
     ;
     border-radius: 500px;

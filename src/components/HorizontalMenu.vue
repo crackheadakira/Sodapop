@@ -1,17 +1,28 @@
 <script setup>
 import { onMounted } from 'vue';
+import { useHorizontalMenuStore } from '../stores/horizontalmenu';
+
+let horizontalMenuStore = useHorizontalMenuStore();
+
+function setTarget(target) {
+    if (horizontalMenuStore.activeID.length > 0) {
+        document.querySelector(`#${horizontalMenuStore.activeID}`).dataset.active = "false";
+    }
+    horizontalMenuStore.setActiveID(target.id)
+    target.dataset.active = "true";
+}
+
+function changeActiveStateLook(type) {
+    let enabledMenu = document.querySelector(`#${horizontalMenuStore.activeID}`)
+    if (type === "mouseover") {
+        enabledMenu.dataset.active = "semiactive";
+    } else if (type === "mouseout") {
+        enabledMenu.dataset.active = "true";
+    }
+}
 
 onMounted(() => {
-    const menuBarDisableds = document.querySelectorAll('#menuBar div[data-active="false"]');
-    for (let menuBarDisabled of menuBarDisableds) {
-        const menuBarEnabled = document.querySelector('#menuBar div[data-active="true"]');
-        menuBarDisabled.addEventListener('mouseover', () => {
-            menuBarEnabled.dataset.active = "semiactive";
-        });
-        menuBarDisabled.addEventListener('mouseout', () => {
-            menuBarEnabled.dataset.active = "true";
-        });
-    }
+    document.querySelector(`#${horizontalMenuStore.activeID}`).dataset.active = "true";
 });
 
 </script>
@@ -19,9 +30,14 @@ onMounted(() => {
 <template>
     <div id="main">
         <div id="menuBar">
-            <div id="songs" data-active="true">Songs</div>
-            <div id="songInfo" data-active="false">Song Info</div>
-            <div id="moreByArtist" data-active="false">More by Joji</div>
+            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
+                @mouseout="changeActiveStateLook('mouseout')" id="songs" data-active="false">
+                Songs
+            </div>
+            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="songInfo"
+                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Song Info</div>
+            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
+                @mouseout="changeActiveStateLook('mouseout')" id="moreByArtist" data-active="false">More by Joji</div>
         </div>
     </div>
 </template>
@@ -56,6 +72,7 @@ onMounted(() => {
     height: 100%;
     border-radius: 500px;
     cursor: pointer;
+    user-select: none;
 }
 
 #menuBar div:hover {
