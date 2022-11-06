@@ -3,10 +3,23 @@ import { ref, onMounted } from 'vue';
 import { usePlayerStore } from '../stores/player';
 
 const player_store = usePlayerStore();
-const playStateIcon = ref(player_store.isPlaying ? "fa-pause" : "fa-play");
+const playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
+
+const trackInput = $ref(null);
+const audioTag = $ref(null);
+const trackDisplayTime = $ref(convertTime(player_store.currentTime));
+const trackEndTime = $ref(convertTime(player_store.currentTrackLength));
+const audioVolume = $ref(player_store.currentVolume);
+
 function playUpdateIcon() {
     player_store.togglePlay();
-    playStateIcon.value = player_store.isPlaying ? "fa-pause" : "fa-play";
+    playStateIcon = player_store.isPlaying ? "fa-pause" : "fa-play";
+    player_store.isPlaying ? audioTag.play() : audioTag.pause();
+}
+
+function stopSong() {
+    playUpdateIcon();
+    audioTag.currentTime = 0;
 }
 
 function convertTime(time) {
@@ -15,29 +28,49 @@ function convertTime(time) {
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 }
 
-function updateTime(time) {
+function updateTime(time, seek = false) {
     player_store.updateTime(time);
-    trackCurrentTime.value = convertTime(time);
+    trackDisplayTime = convertTime(time);
+    if (time === player_store.currentTrackLength) {
+        stopSong();
+    }
+    if (seek) {
+        audioTag.fastSeek(time);
+    }
 }
 
-const trackCurrentTime = ref(convertTime(player_store.currentTime));
+function updateLength(length) {
+    player_store.updateTrackLength(Math.floor(length));
+    trackEndTime = convertTime(length);
+    audioTag.max = Math.floor(length);
+}
+
+function updateVolume(volume) {
+    player_store.updateSoundVolume();
+    audioVolume = volume;
+    audioTag.volume = volume / 100;
+}
+
+onMounted(() => {
+    audioTag.volume = audioVolume / 100;
+});
 
 </script>
 
 <template>
     <div id="mainPlayer">
         <div id="songInfo">
-            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6"
+            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/ebae9e4f8814c1b12ff0383f8701460d.jpg#ebae9e4f8814c1b12ff0383f8701460d"
                 id="albumCover">
             <div id="songInfoText">
-                <p id="songName">BLAHBLAHBLAH DEMO</p>
-                <p id="songArtist">Joji</p>
+                <p id="songName">Nxde</p>
+                <p id="songArtist">(G)I-DLE</p>
             </div>
         </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">{{ trackCurrentTime }}<input @change="updateTime($event.target.value)"
-                    type="range" max="142" :value=player_store.currentTime id="musicProgressBar"><label
-                    id="trackEndLength">2:22</label>
+            <label id="trackStartLength">{{ trackDisplayTime }}<input @change="updateTime($event.target.value, true)"
+                    ref="trackInput" type="range" :max="player_store.currentTrackLength" :value=player_store.currentTime
+                    class="slider" id="musicProgressBar"><label id="trackEndLength">{{ trackEndTime }}</label>
             </label>
             <div id="playerButtons">
                 <i @click="player_store.toggleShuffle()" class="fa-solid fa-shuffle fa-sm footerPlayerButton"
@@ -49,15 +82,25 @@ const trackCurrentTime = ref(convertTime(player_store.currentTime));
                 <i @click="player_store.toggleRepeat()" class="fa-solid fa-repeat fa-sm footerPlayerButton"
                     :class="{ activePlayerButton: player_store.isRepeating }" id="repeatButton"></i>
             </div>
+            <audio controls id="HTMLAudioPlayer" ref="audioTag"
+                @timeupdate="updateTime(Math.floor($event.target.currentTime))"
+                @play="updateLength(Math.floor($event.target.duration))">
+                <source src="/nxde.flac/" type="audio/flac">
+            </audio>
         </div>
         <div id="volumeBar">
             <i class="fa-solid fa-volume-low"></i>
-            <input type="range" min="1" max="100" value="50" class="slider" id="volumeSlider">
+            <input type="range" min="1" max="100" :value=audioVolume @change="updateVolume($event.target.value)"
+                class="slider" id="volumeSlider">
         </div>
     </div>
 </template>
 
 <style scoped>
+audio {
+    display: none;
+}
+
 #mainPlayer {
     position: fixed;
     display: grid;
@@ -152,57 +195,56 @@ const trackCurrentTime = ref(convertTime(player_store.currentTime));
     margin: 32px;
 }
 
-.slider {
+#volumeSlider {
     width: 80px;
     height: 6px;
-    background: #d3d3d3;
+}
+
+
+#musicProgressBar {
+    width: 400px;
+    height: 9px;
+    margin: 0 15px 0 15px;
+}
+
+.slider {
+    background: #272727;
     outline: none;
     opacity: 1;
     -webkit-transition: .2s;
     transition: opacity .2s;
     border-radius: 50px;
+    border: none;
+}
+
+.slider::-webkit-progress-value {
+    background-color: rgb(168, 249, 255);
+    border-radius: 500px;
+    height: inherit;
+}
+
+.slider::-moz-range-progress {
+    background-color: rgb(168, 249, 255);
+    border-radius: 500px;
+    height: inherit;
 }
 
 .slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 13px;
-    height: 13px;
+    aspect-ratio: 1/1;
+    height: calc(inherit*2);
+    width: fit-content;
+    border-radius: 100%;
     background: #a5a8ba;
-    border-radius: 50%;
     cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
+    aspect-ratio: 1/1;
+    height: calc(inherit*2);
+    width: fit-content;
+    border-radius: 100%;
     background: #a5a8ba;
     cursor: pointer;
-}
-
-#musicProgressBar {
-    width: 400px;
-    height: 5px;
-    margin: 0 15px 0 15px;
-    background: #272727;
-    border-radius: 500px;
-    border: none;
-}
-
-#musicProgressBar::-webkit-progress-bar {
-    background-color: #272727;
-    border-radius: 500px;
-}
-
-#musicProgressBar::-webkit-progress-value {
-    background-color: rgb(168, 249, 255);
-    ;
-    border-radius: 500px;
-}
-
-#musicProgressBar::-moz-progress-bar {
-    background-color: rgb(168, 249, 255);
-    border-radius: 500px;
 }
 
 #trackStartLength {
