@@ -45,6 +45,7 @@ li {
     border: 2px solid #404040;
     border-color: transparent;
     font-weight: 500;
+    user-select: none;
 }
 
 li span {

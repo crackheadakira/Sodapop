@@ -4,10 +4,17 @@
 
 <template>
     <div id="mainPlayer">
-        <img src="https://discussions.apple.com/content/attachment/592590040" id="albumCover">
+        <div id="songInfo">
+            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6"
+                id="albumCover">
+            <div id="songInfoText">
+                <p id="songName">BLAHBLAHBLAH DEMO</p>
+                <p id="songArtist">Joji</p>
+            </div>
+        </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">1:22<progress max="100" value="35" id="musicProgressBar"></progress><label
-                    id="trackEndLength">3:53</label> </label>
+            <label id="trackStartLength">1:36<progress max="100" value="67" id="musicProgressBar"></progress><label
+                    id="trackEndLength">2:22</label> </label>
             <div id="playerButtons">
                 <font-awesome-icon icon="fa-solid fa-shuffle" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-backward" size="sm" color="#505050" class="footerPlayerButton" />
@@ -25,6 +32,7 @@
 
 <style scoped>
 #mainPlayer {
+    position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,6 +40,8 @@
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
+    bottom: 0;
+    left: 0;
 }
 
 #playerButtons {
@@ -59,9 +69,32 @@
 }
 
 #albumCover {
-    margin: 24px;
+    margin: 24px 12px 24px 24px;
     width: 64px;
     border-radius: 5px;
+}
+
+#songInfo {
+    display: flex;
+    align-items: center;
+}
+
+#songInfoText {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#songInfoText p {
+    margin: 0;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#songArtist {
+    font-size: 0.8rem;
 }
 
 #volumeBar {
@@ -74,17 +107,13 @@
 
 .slider {
     width: 80px;
-    height: 5px;
+    height: 6px;
     background: #d3d3d3;
     outline: none;
-    opacity: 0.7;
+    opacity: 1;
     -webkit-transition: .2s;
     transition: opacity .2s;
     border-radius: 50px;
-}
-
-.slider:hover {
-    opacity: 1;
 }
 
 .slider::-webkit-slider-thumb {
