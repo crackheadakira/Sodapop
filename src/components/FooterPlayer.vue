@@ -1,4 +1,32 @@
 <script setup>
+import { computed } from 'vue';
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+
+function getPlayState() {
+    return localStorage.getItem('playState');
+}
+
+function setPlayState(value) {
+    localStorage.setItem('playState', value);
+}
+
+function changePlayState() {
+    if (getPlayState() === 'play') {
+        setPlayState('pause');
+    } else {
+        setPlayState('play');
+    }
+}
+
+const playStateIcon = computed(() => {
+    console.log(getPlayState());
+    if (getPlayState() === 'play' || getPlayState() == null) {
+        setPlayState('play');
+        return faPlay;
+    } else {
+        return faPause;
+    }
+})
 
 </script>
 
@@ -18,7 +46,8 @@
             <div id="playerButtons">
                 <font-awesome-icon icon="fa-solid fa-shuffle" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-backward" size="sm" color="#505050" class="footerPlayerButton" />
-                <font-awesome-icon icon="fa-solid fa-play" size="lg" class="footerPlayerButton" />
+                <font-awesome-icon @click="changePlayState" :icon="playStateIcon" size="lg" class="footerPlayerButton"
+                    id="mainPlay" />
                 <font-awesome-icon icon="fa-solid fa-forward" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-repeat" size="sm" color="#505050" class="footerPlayerButton" />
             </div>
@@ -72,16 +101,13 @@
     margin: 24px 12px 24px 24px;
     width: 64px;
     border-radius: 5px;
+    user-select: none;
+    cursor: pointer;
 }
 
 #songInfo {
     display: flex;
     align-items: center;
-}
-
-#songInfo * {
-    user-select: none;
-    cursor: pointer;
 }
 
 #songInfoText {
@@ -97,6 +123,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    user-select: none;
+    cursor: pointer;
 }
 
 #songInfoText p:hover {
