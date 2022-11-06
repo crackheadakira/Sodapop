@@ -1,33 +1,15 @@
 <script setup>
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import { usePlayerStore } from '../stores/player';
 
-function getPlayState() {
-    return localStorage.getItem('playState');
+const player_store = usePlayerStore();
+
+const playStateIcon = ref(player_store.isPlaying ? faPause : faPlay);
+function updateIcon() {
+    player_store.togglePlay();
+    playStateIcon.value = player_store.isPlaying ? faPause : faPlay;
 }
-
-function setPlayState(value) {
-    localStorage.setItem('playState', value);
-}
-
-function changePlayState() {
-    if (getPlayState() === 'play') {
-        setPlayState('pause');
-    } else {
-        setPlayState('play');
-    }
-}
-
-const playStateIcon = computed(() => {
-    console.log(getPlayState());
-    if (getPlayState() === 'play' || getPlayState() == null) {
-        setPlayState('play');
-        return faPlay;
-    } else {
-        return faPause;
-    }
-})
-
 </script>
 
 <template>
@@ -46,7 +28,7 @@ const playStateIcon = computed(() => {
             <div id="playerButtons">
                 <font-awesome-icon icon="fa-solid fa-shuffle" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-backward" size="sm" color="#505050" class="footerPlayerButton" />
-                <font-awesome-icon @click="changePlayState" :icon="playStateIcon" size="lg" class="footerPlayerButton"
+                <font-awesome-icon @click="updateIcon()" :icon="playStateIcon" size="lg" class="footerPlayerButton"
                     id="mainPlay" />
                 <font-awesome-icon icon="fa-solid fa-forward" size="sm" color="#505050" class="footerPlayerButton" />
                 <font-awesome-icon icon="fa-solid fa-repeat" size="sm" color="#505050" class="footerPlayerButton" />
