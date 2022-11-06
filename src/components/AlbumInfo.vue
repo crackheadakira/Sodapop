@@ -40,6 +40,7 @@ p {
   width: 100%;
   padding: 20px;
   margin-bottom: 15px;
+  background-color: #161616;
 }
 
 #album {

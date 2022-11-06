@@ -102,7 +102,9 @@ audio {
 }
 
 #mainPlayer {
-    position: sticky;
+    position: absolute;
+    bottom: 0;
+    margin-top: auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
@@ -111,7 +113,6 @@ audio {
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
-    bottom: 0;
 }
 
 #playerButtons {

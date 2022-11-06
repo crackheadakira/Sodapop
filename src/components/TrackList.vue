@@ -23,6 +23,8 @@ defineProps({
 #tracks {
     overflow-y: scroll;
     overflow-x: hidden;
+    max-height: 450px;
+    scrollbar-width: thin;
 }
 
 ol {
