@@ -52,6 +52,7 @@ function updateVolume(volume) {
 }
 
 onMounted(() => {
+    audioTag.currentTime = player_store.currentTime;
     audioTag.volume = audioVolume / 100;
 });
 
@@ -60,11 +61,11 @@ onMounted(() => {
 <template>
     <div id="mainPlayer">
         <div id="songInfo">
-            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/ebae9e4f8814c1b12ff0383f8701460d.jpg#ebae9e4f8814c1b12ff0383f8701460d"
+            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6"
                 id="albumCover">
             <div id="songInfoText">
-                <p id="songName">Nxde</p>
-                <p id="songArtist">(G)I-DLE</p>
+                <p id="songName">Die For You</p>
+                <p id="songArtist">Joji</p>
             </div>
         </div>
         <div id="buttonsAndProgress">
@@ -85,7 +86,7 @@ onMounted(() => {
             <audio controls id="HTMLAudioPlayer" ref="audioTag"
                 @timeupdate="updateTime(Math.floor($event.target.currentTime))"
                 @play="updateLength(Math.floor($event.target.duration))">
-                <source src="/nxde.flac/" type="audio/flac">
+                <source src="/dieforyou.flac/" type="audio/flac">
             </audio>
         </div>
         <div id="volumeBar">

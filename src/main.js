@@ -9,4 +9,6 @@ pinia.use(piniaPersist);
 
 createApp(App)
     .use(pinia)
-    .mount('#app')
+    .mount('#app');
+
+Neutralino.init()
