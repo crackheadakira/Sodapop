@@ -15,7 +15,8 @@
     "pinia": "^2.0.23",
     "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.41",
-    "vue-feather": "^2.0.0"
+    "vue-feather": "^2.0.0",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",

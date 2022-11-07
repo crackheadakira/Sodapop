@@ -4,7 +4,7 @@ import FooterPlayer from './components/FooterPlayer.vue'
 </script>
 
 <template>
-  <AlbumPage />
+  <RouterView />
   <FooterPlayer />
 </template>
 
