@@ -1,7 +1,7 @@
 <script setup>
-import AlbumInfo from './AlbumInfo.vue'
-import TrackList from './TrackList.vue'
-import HorizontalMenu from './HorizontalMenu.vue'
+import AlbumInfo from '../components/AlbumInfo.vue'
+import TrackList from '../components/TrackList.vue'
+import HorizontalMenu from '../components/HorizontalMenu.vue'
 </script>
 
 <template>

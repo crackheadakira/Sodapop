@@ -1,9 +1,15 @@
-import AlbumPage from './components/AlbumPage.vue'
+import AlbumPage from './views/AlbumPage.vue'
+import HomeMenu from './views/HomeMenu.vue'
 
 export const routes = [
     {
-        path: '/',
+        path: '/album/:albumName',
         name: 'AlbumPage',
         component: AlbumPage
+    },
+    {
+        path: '/',
+        name: 'HomeMenu',
+        component: HomeMenu
     }
 ]
