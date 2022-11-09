@@ -59,13 +59,22 @@ li:hover {
     cursor: pointer;
 }
 
-li:before {
-    margin-right: 6px;
+li::before {
+    display: inline-block;
     content: counter(item);
-    width: 1.2em;
+    width: 1.2rem;
     font-size: 0.9rem;
     font-weight: 400;
     text-align: center;
+    margin-right: 6px;
+}
+
+li:hover::before {
     display: inline-block;
+    content: '\f04b';
+    font: var(--fa-font-solid);
+    font-size: 0.9rem;
+    margin-right: 6px;
+    height: 1.2rem;
 }
 </style>
