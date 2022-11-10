@@ -14,7 +14,7 @@ export default {
   },
   plugins: [
     vue({
-      reactivityTransform: true
+      reactivityTransform: true,
     })
   ]
 }

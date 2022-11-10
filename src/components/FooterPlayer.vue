@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { usePlayerStore } from '../stores/player';
+import { convertTime } from '../composables/convertTime.js';
 
 const player_store = usePlayerStore();
 const playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
@@ -22,12 +23,6 @@ function stopSong() {
     audioTag.currentTime = 0;
 }
 
-function convertTime(time) {
-    let minutes = Math.floor(time / 60);
-    let seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-}
-
 function updateTime(time, seek = false) {
     player_store.updateTime(time);
     trackDisplayTime = convertTime(time);
@@ -46,7 +41,7 @@ function updateLength(length) {
 }
 
 function updateVolume(volume) {
-    player_store.updateSoundVolume();
+    player_store.updateSoundVolume(volume);
     audioVolume = volume;
     audioTag.volume = volume / 100;
 }

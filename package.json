@@ -4,12 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "serve:neu": "vite build && neu run",
+    "app": "vite build && neu run",
     "build": "vite build && neu build --release",
     "dev": "vite",
     "preview": "vite preview"
   },
   "dependencies": {
+    "browser-fs-access": "^0.31.1",
     "feather-icons": "^4.29.0",
     "music-metadata-browser": "^2.5.9",
     "pinia": "^2.0.23",

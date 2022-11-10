@@ -1,11 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import * as musicMetadata from 'music-metadata-browser';
-import { Buffer } from 'buffer';
-
-const fileBrowser = $ref(null);
-
-window.Buffer = Buffer;
+import { returnMetadata } from '../composables/getMetadata.js';
 
 defineProps({
   albumInfo: {
@@ -13,10 +8,6 @@ defineProps({
     required: true,
   },
 })
-
-async function getMetadata() {
-  console.log(await musicMetadata.parseBuffer(Buffer.from(await fileBrowser.files[0].arrayBuffer())))
-}
 </script>
 
 <template>
@@ -28,9 +19,9 @@ async function getMetadata() {
       <div id="albumInfo">
         <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
         <p>{{ albumInfo.releaseYear }}</p>
-        <!-- <input id="fileItem" type="file" ref="fileBrowser" @change="getMetadata()" /> -->
 
         <div id="mainButtons">
+          <button @click="returnMetadata">test</button>
           <button class="danger-button">
             <i class="fa-solid fa-play"></i> Play
           </button>
