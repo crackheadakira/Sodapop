@@ -59,8 +59,8 @@ onMounted(() => {
             <img src="https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6"
                 id="albumCover">
             <div id="songInfoText">
-                <p id="songName">Die For You</p>
-                <p id="songArtist">Joji</p>
+                <p class="clickableItemInfo" id="songName">Die For You</p>
+                <p class="clickableItemInfo" id="songArtist">Joji</p>
             </div>
         </div>
         <div id="buttonsAndProgress">
@@ -81,7 +81,7 @@ onMounted(() => {
             <audio controls id="HTMLAudioPlayer" ref="audioTag"
                 @timeupdate="updateTime(Math.floor($event.target.currentTime))"
                 @play="updateLength(Math.floor($event.target.duration))">
-                <source src="/dieforyou.flac/" type="audio/flac">
+                <source src="/songs/dieforyou.flac" type="audio/flac">
             </audio>
         </div>
         <div id="volumeBar">
@@ -98,10 +98,9 @@ audio {
 }
 
 #mainPlayer {
-    position: absolute;
-    bottom: 0;
     margin-top: auto;
     display: grid;
+    height: fit-content;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
     justify-content: center;
@@ -109,6 +108,7 @@ audio {
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
+    z-index: 10;
 }
 
 #playerButtons {
@@ -162,22 +162,6 @@ audio {
     display: flex;
     justify-content: center;
     flex-direction: column;
-}
-
-#songInfoText p {
-    margin: 0;
-    width: fit-content;
-    max-width: 200px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    cursor: pointer;
-}
-
-#songInfoText p:hover {
-    text-decoration: underline;
-    transform: scale(1.01);
 }
 
 #songArtist {

@@ -23,6 +23,22 @@ const albumList = [
         artist: "Seventeen",
     }
 ];
+
+const artistList = [{
+    name: "Joji",
+    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6",
+}, {
+    name: "Xdinary Heroes",
+    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/048f22b0516b92c7f29663c9008aac43.jpg#048f22b0516b92c7f29663c9008aac43",
+},
+{
+    name: "The Weeknd",
+    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/7d957bd27dd562bee7aaa89eafa0bbe6.jpg#7d957bd27dd562bee7aaa89eafa0bbe6",
+},
+{
+    name: "Seventeen",
+    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/a6ca584491130520db4092d04c32e907.jpg#a6ca584491130520db4092d04c32e907",
+}];
 </script>
 
 <template>
@@ -32,11 +48,8 @@ const albumList = [
             <div class="recentCoasterMenu">
                 <div class="coasterItem" v-for="Track in trackList.slice(0, 4)">
                     <router-link to="/album/SMITHEREENS"><img class="albumCover" :src="albumCover"></router-link>
-                    <div class="itemInfo">
-                        <div class="itemName">{{ Track }}</div>
-                        <i class="fa-solid fa-play"></i>
-                    </div>
-                    <div class="artistName">Joji</div>
+                    <div class="itemName clickableItemInfo">{{ Track }}</div>
+                    <div class="artistName clickableItemInfo">Joji</div>
                 </div>
                 <div class="seeMoreItem">See more...</div>
             </div>
@@ -47,11 +60,19 @@ const albumList = [
             <div class="recentCoasterMenu">
                 <div class="coasterItem" v-for="Album in albumList.slice(0, 4)">
                     <img class="albumCover" :src="Album.cover">
-                    <div class="itemInfo">
-                        <div class="itemName">{{ Album.name }}</div>
-                        <i class="fa-solid fa-play"></i>
-                    </div>
-                    <div class="artistName">{{ Album.artist }}</div>
+                    <div class="itemName clickableItemInfo">{{ Album.name }}</div>
+                    <div class="artistName clickableItemInfo">{{ Album.artist }}</div>
+                </div>
+                <div class="seeMoreItem">See more...</div>
+            </div>
+        </div>
+
+        <div id="recentArtists">
+            <h2>Recently Played Artists</h2>
+            <div class="recentCoasterMenu">
+                <div class="coasterItem" v-for="Artist in artistList.slice(0, 4)">
+                    <img class="albumCover" :src="Artist.cover">
+                    <div class="itemName clickableItemInfo">{{ Artist.name }}</div>
                 </div>
                 <div class="seeMoreItem">See more...</div>
             </div>
@@ -65,13 +86,13 @@ const albumList = [
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
 }
 
 .recentCoasterMenu {
     display: flex;
-    justify-content: center;
     gap: 30px;
     margin: 20px;
     border-radius: 10px;
@@ -97,31 +118,10 @@ const albumList = [
     cursor: pointer;
 }
 
-.itemInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.itemInfo i {
-    transition: 250ms ease;
-}
-
-.itemInfo i:hover {
-    filter: brightness(85%);
-}
-
 .coasterItem {
     max-width: 180px;
     font-size: 0.9rem;
     font-weight: 500;
-}
-
-.itemName {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 140px;
 }
 
 .artistName {

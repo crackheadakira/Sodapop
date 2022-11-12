@@ -1,19 +1,19 @@
 <script setup>
 import { onMounted } from 'vue';
-import { useHorizontalMenuStore } from '../stores/horizontalmenu';
+import { useTopMenuBar } from '../stores/topmenubar';
 
-let horizontalMenuStore = useHorizontalMenuStore();
+let topMenuStore = useTopMenuBar();
 
 function setTarget(target) {
-    if (horizontalMenuStore.activeID.length > 0) {
-        document.getElementById(horizontalMenuStore.activeID).dataset.active = "false";
+    if (topMenuStore.activeID.length > 0) {
+        document.getElementById(topMenuStore.activeID).dataset.active = "false";
     }
-    horizontalMenuStore.setActiveID(target.id)
+    topMenuStore.setActiveID(target.id)
     target.dataset.active = "true";
 }
 
 function changeActiveStateLook(type) {
-    let enabledMenu = document.getElementById(horizontalMenuStore.activeID)
+    let enabledMenu = document.getElementById(topMenuStore.activeID)
     if (type === "mouseover") {
         enabledMenu.dataset.active = "semiactive";
     } else if (type === "mouseout") {
@@ -22,44 +22,53 @@ function changeActiveStateLook(type) {
 }
 
 onMounted(() => {
-    document.getElementById(horizontalMenuStore.activeID).dataset.active = "true";
+    document.getElementById(topMenuStore.activeID).dataset.active = "true";
 });
 
 </script>
 
 <template>
-    <div id="main">
+    <div id="homeMenuBar">
+        <i class="fa-solid fa-arrow-left" @click="$router.back()"></i>
         <div id="menuBar">
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="songs" data-active="false">
-                Songs
+                @mouseout="changeActiveStateLook('mouseout')" id="home" data-active="false">
+                Home
             </div>
-            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="songInfo"
-                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Song Info</div>
+            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="albums"
+                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Albums</div>
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="moreByArtist" data-active="false">More by Joji</div>
+                @mouseout="changeActiveStateLook('mouseout')" id="artists" data-active="false">Artists</div>
         </div>
+        <i class="fa-solid fa-arrow-right" @click="$router.forward()"></i>
     </div>
 </template>
 
 <style scoped>
-#main {
+i:hover {
+    filter: brightness(85%);
+}
+
+#homeMenuBar {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
+    background-color: #171717;
+    border-bottom: 1px solid #272727;
 }
 
 #menuBar {
     height: 40px;
     display: flex;
     justify-content: center;
-    align-items: center;
     background-color: #282828;
     font-weight: 600;
     font-size: 0.9rem;
     width: fit-content;
     padding: 2px;
+    margin: 0 20px 0 20px;
     border-radius: 500px;
 }
 
