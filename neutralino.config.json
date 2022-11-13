@@ -9,7 +9,8 @@
   "nativeAllowList": [
     "app.*",
     "os.*",
-    "debug.log"
+    "debug.log",
+    "filesystem.*"
   ],
   "modes": {
     "window": {

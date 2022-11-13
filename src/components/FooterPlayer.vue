@@ -4,13 +4,13 @@ import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
 
 const player_store = usePlayerStore();
-const playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 
-const trackInput = $ref(null);
 const audioTag = $ref(null);
-const trackDisplayTime = $ref(convertTime(player_store.currentTime));
-const trackEndTime = $ref(convertTime(player_store.currentTrackLength));
-const audioVolume = $ref(player_store.currentVolume);
+const trackInput = $ref(null);
+let audioVolume = $ref(player_store.currentVolume);
+let trackDisplayTime = $ref(convertTime(player_store.currentTime));
+let trackEndTime = $ref(convertTime(player_store.currentTrackLength));
+let playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 
 function playUpdateIcon() {
     player_store.togglePlay();
@@ -98,9 +98,10 @@ audio {
 }
 
 #mainPlayer {
+    position: absolute;
+    bottom: 0;
     margin-top: auto;
     display: grid;
-    height: fit-content;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
     justify-content: center;
@@ -108,7 +109,6 @@ audio {
     width: 100%;
     background-color: #171717;
     border-top: 1px solid #272727;
-    z-index: 10;
 }
 
 #playerButtons {

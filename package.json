@@ -4,15 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "app": "vite build && neu run",
+    "appdev": "vite build && neu run",
     "build": "vite build && neu build --release",
     "dev": "vite",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@empathize/framework": "^1.4.15",
     "browser-fs-access": "^0.31.1",
     "feather-icons": "^4.29.0",
+    "music-metadata": "^8.1.0",
     "music-metadata-browser": "^2.5.9",
+    "parse-audio-metadata": "^1.1.0",
     "pinia": "^2.0.23",
     "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.41",

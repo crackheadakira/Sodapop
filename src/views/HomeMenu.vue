@@ -85,8 +85,8 @@ const artistList = [{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    overflow: scroll;
+    overflow: hidden;
+    overflow-y: scroll;
     height: 100%;
     width: 100%;
 }

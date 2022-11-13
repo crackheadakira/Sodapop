@@ -5,10 +5,14 @@ import TopMenuBarVue from './components/TopMenuBar.vue';
 
 <template>
   <TopMenuBarVue />
-  <RouterView />
+  <div id="routerViewMiddle">
+    <RouterView />
+  </div>
   <FooterPlayer />
 </template>
 
 <style scoped>
-
+#routerViewMiddle {
+  height: calc(100% - 61px - 113px);
+}
 </style>

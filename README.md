@@ -1,4 +1,2 @@
-# Sodapop, an experimental local file music player, inspired by the UI of Cider.
-## This is a work in progress, and is not yet ready for use.
-
-<img src="./public/logo.png" alt="Sodapop logo" width="80px"/>
+# Sodapop, a local file music player with a sleek modern UI. 
+## This is a work in progress, so there may be bugs. If you do find any, please report them in the Issues tab.
