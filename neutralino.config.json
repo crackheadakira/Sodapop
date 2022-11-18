@@ -10,7 +10,8 @@
     "app.*",
     "os.*",
     "debug.log",
-    "filesystem.*"
+    "filesystem.*",
+    "custom.*"
   ],
   "modes": {
     "window": {
@@ -28,8 +29,8 @@
     "resourcesPath": "/dist/",
     "extensionsPath": "/",
     "clientLibrary": "/public/neutralino.js",
-    "binaryVersion": "4.6.0",
-    "clientVersion": "3.5.0",
+    "binaryVersion": "nightly",
+    "clientVersion": "nightly",
     "frontendLibrary": {
       "patchFile": "/index.html",
       "devUrl": "http://localhost:5173"

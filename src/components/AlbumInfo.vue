@@ -21,7 +21,7 @@ defineProps({
         <p>{{ albumInfo.releaseYear }}</p>
 
         <div id="mainButtons">
-          <button @click="returnMetadata">test</button>
+          <button @click="returnMetadata">Directory Loading</button>
           <button class="danger-button">
             <i class="fa-solid fa-play"></i> Play
           </button>

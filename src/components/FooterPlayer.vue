@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
 
