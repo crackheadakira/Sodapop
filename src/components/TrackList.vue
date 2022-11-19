@@ -46,7 +46,9 @@ li {
     border: 2px solid #404040;
     border-color: transparent;
     font-weight: 500;
+    -webkit-user-select: none;
     user-select: none;
+    -ms-user-select: none;
 }
 
 li span {

@@ -48,8 +48,10 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  user-select: none;
   cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -ms-user-select: none;
 }
 
 .clickableItemInfo:hover {

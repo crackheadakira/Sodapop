@@ -72,7 +72,9 @@ onMounted(() => {
     height: 100%;
     border-radius: 500px;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
+    -ms-user-select: none;
 }
 
 #menuBar div:hover {

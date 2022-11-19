@@ -190,7 +190,6 @@ audio {
 
 .slider {
     background: #272727;
-    outline: none;
     opacity: 1;
     -webkit-transition: .2s;
     transition: opacity .2s;
@@ -238,6 +237,8 @@ label {
     font-size: 0.8rem;
     font-weight: 500;
     display: inline-block;
+    -webkit-user-select: none;
     user-select: none;
+    -ms-user-select: none;
 }
 </style>

@@ -1,39 +1,35 @@
 import { fs, path } from '@empathize/framework';
-import * as process from 'process/browser';
-import { Buffer } from 'buffer';
 
-window.process = process;
-window.Buffer = Buffer;
-
-// As of now, it seemed to take 0.32s-0.44s per file.
-// Meaning, 100 files would take 32s and 1000 files would take 5.3 minutes.
-export async function returnMetadata() {
-    let audioFiles = [];
-    window.Neutralino.os.showFolderDialog('Select your music folder').then(async (musicDir) => {
-        console.time("Metadata");
-        recursiveListDir(musicDir).then(async (files) => {
-            for (let i = 0, n = files.length; i < n; i++) {
-                audioFiles.push(await window.Neutralino.custom.metadata(files[i]));
+export async function getMetadata() {
+    try {
+        let audioFiles = [];
+        let musicDir = await window.Neutralino.os.showFolderDialog('Select your music folder');
+        let timeStart = performance.now();
+        let files = await recursiveListDir(musicDir);
+        for (let i = 0, n = files.length; i < n; i++) {
+            audioFiles.push(await Neutralino.custom.metadata(files[i].path, files[i].albumCover, (files[i]?.coverPath || '')));
+            if (i % 20 === 0) {
+                console.log(`${Math.floor(performance.now() - timeStart)}ms - ${i}/${n}`);
             }
-            console.timeEnd("Metadata");
-            console.log(audioFiles);
-            return audioFiles;
-        }).catch((err) => console.error(err));
-    }).catch((err) => console.error(err));
+        }
+        console.log(`Metadata took ${Math.ceil(performance.now() - timeStart)}ms`);
+        return audioFiles;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
 }
 
-
 async function recursiveListDir(dir) {
-    let acceptedFormats = /mp3|wav|ogg|flac|m4a|aac|ape/;
+    let acceptedFormats = /mp3|flac/;
     try {
         let files = await fs.files(dir);
-        let allFiles = files.filter(file => file.type === 'file' && acceptedFormats.test(file.name.toLowerCase())).map(file => path.join(dir, file.name));
-
-        let imageFiles = files.filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('jpg' || '.png')).map(file => {
-            return {
-                path: path.join(dir, file.name),
-                dir: dir.split('/').pop()
-            };
+        let imageFiles = files.filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('jpg' || '.png')).map(file => dir + '/' + file.name);
+        let allFiles = files.filter(file => file.type === 'file' && acceptedFormats.test(file.name.toLowerCase())).map((file, index) => {
+            let fileObject = { path: path.join(dir, file.name), albumCover: false };
+            if (imageFiles.length > 0) fileObject.coverPath = imageFiles[index % imageFiles.length];
+            if (index === 0 && imageFiles.length <= 0) fileObject.albumCover = true;
+            return fileObject;
         });
         let directories = files.filter((file) => file.type === 'directory').map(folder => path.join(dir, folder.name));
         for (let i = 0, n = directories.length; i < n; i++) {

@@ -1,6 +1,20 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { returnMetadata } from '../composables/getMetadata.js';
+import { getMetadata } from '../composables/getMetadata.js';
+
+let albumCover = $ref(null);
+
+async function getAlbumImage() {
+  let metadata = await getMetadata();
+  if (metadata !== null) {
+    console.log(metadata[0]);
+    if (metadata[0]?.coverPath) {
+      albumCover = `file://${metadata[0].coverPath}`;
+    } else if (metadata[0]?.albumCover) {
+      albumCover = `data:image/jpeg;base64,${metadata[0].albumCover}`;
+    }
+  }
+}
 
 defineProps({
   albumInfo: {
@@ -8,20 +22,24 @@ defineProps({
     required: true,
   },
 })
+
+onMounted(() => {
+  albumCover = albumInfo.albumCover;
+});
 </script>
 
 <template>
   <div id="mainBody">
     <div id="album">
-      <div v-if="albumInfo.albumCover">
-        <img :src="albumInfo.albumCover" id="albumCover">
+      <div v-if="albumCover">
+        <img :src="albumCover" id="albumCover">
       </div>
       <div id="albumInfo">
         <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
         <p>{{ albumInfo.releaseYear }}</p>
 
         <div id="mainButtons">
-          <button @click="returnMetadata">Directory Loading</button>
+          <button @click="getAlbumImage()">Directory Loading</button>
           <button class="danger-button">
             <i class="fa-solid fa-play"></i> Play
           </button>
