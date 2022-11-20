@@ -1,48 +1,24 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getMetadata } from '../composables/getMetadata.js';
-import { dir, path, fetch, fs } from '@empathize/framework';
-
-let albumCover = $ref(null);
-
-async function getAlbumImage() {
-  try {
-    let metadata = await getMetadata();
-    if (metadata !== null) {
-      if (metadata[0]?.coverPath) {
-        console.log(metadata[0]);
-        let albumImage = new Uint8Array(await fs.read(metadata[0].coverPath, true));
-        let blob = new Blob([albumImage], { type: "image/jpeg" });
-        albumCover = URL.createObjectURL(blob);
-      } else if (metadata[0]?.albumCover) {
-        albumCover = `data:image/jpeg;base64,${metadata[0].albumCover}`;
-      }
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-defineProps({
+const props = defineProps({
   albumInfo: {
     type: Object,
     required: true,
   },
-})
+});
+
 </script>
 
 <template>
   <div id="mainBody">
     <div id="album">
       <div>
-        <img :src="albumCover" id="albumCover">
+        <img :src="albumInfo.cover" id="albumCover">
       </div>
       <div id="albumInfo">
         <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
         <p>{{ albumInfo.releaseYear }}</p>
 
         <div id="mainButtons">
-          <button @click="getAlbumImage()">Directory Loading</button>
           <button class="danger-button">
             <i class="fa-solid fa-play"></i> Play
           </button>
@@ -83,6 +59,7 @@ p {
 
 #albumCover {
   height: 170px;
+  width: 170px;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }

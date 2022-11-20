@@ -5,6 +5,8 @@ import { createPinia } from 'pinia';
 import piniaPersist from 'pinia-plugin-persist'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './router';
+import VueSweetalert2 from 'vue-sweetalert2';
+import '@sweetalert2/theme-dark';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -17,6 +19,7 @@ const pinia = createPinia()
 createApp(App)
     .use(pinia)
     .use(router)
+    .use(VueSweetalert2)
     .mount('#app');
 
 if (!window.NL_PORT) {

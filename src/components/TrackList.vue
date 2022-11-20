@@ -1,7 +1,15 @@
 <script setup>
-defineProps({
-    TrackList: {
-        type: Array,
+import { usePlayerStore } from '../stores/player';
+import { convertTime } from '../composables/convertTime.js';
+import { watch } from 'vue';
+const player_store = usePlayerStore();
+watch(props.albumInfo, async () => {
+    console.log(props.albumInfo);
+})
+
+const props = defineProps({
+    albumInfo: {
+        type: Object,
         required: true,
     },
 })
@@ -9,14 +17,12 @@ defineProps({
 </script>
 
 <template>
-    <div v-if="TrackList.length > 0">
-        <ol id="tracks">
-            <li v-for="Track in TrackList">
-                {{ Track.trackName }}
-                <span>{{ Track.length }}</span>
-            </li>
-        </ol>
-    </div>
+    <ol id="tracks">
+        <li v-for="Track in albumInfo.trackList">
+            {{ Track.trackName }}
+            <span>{{ convertTime(Track.length) }}</span>
+        </li>
+    </ol>
 </template>
 
 <style scoped>

@@ -7,6 +7,7 @@ export async function getMetadata() {
         let timeStart = performance.now();
         let files = await recursiveListDir(musicDir);
         for (let i = 0, n = files.length; i < n; i++) {
+            // TODO: Fetch metadata from songs first, then fetch album covers.
             audioFiles.push(await Neutralino.custom.metadata(files[i].path, files[i].albumCover, (files[i]?.coverPath || '')));
             if (i % 20 === 0) {
                 console.log(`${Math.floor(performance.now() - timeStart)}ms - ${i}/${n}`);
@@ -20,20 +21,30 @@ export async function getMetadata() {
     }
 }
 
-async function recursiveListDir(dir) {
+async function recursiveListDir(dir, isDisc = false, coverDir = "") {
     let acceptedFormats = /mp3|flac/;
     try {
         let files = await fs.files(dir);
-        let imageFiles = files.filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('jpg' || '.png')).map(file => dir + '/' + file.name);
+        let imageFiles = files.filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('jpg' || 'png')).map(file => dir + '/' + file.name);
+
+        let directories = files.filter((file) => file.type === 'directory').map((file) => file.name);
+
+        if (imageFiles.length >= 1) coverDir = imageFiles;
+        directories.map((folder => {
+            if (folder && coverDir.length >= 1) {
+                isDisc = true
+            }
+        }))
+        directories = directories.map(folder => path.join(dir, folder));
+
         let allFiles = files.filter(file => file.type === 'file' && acceptedFormats.test(file.name.toLowerCase())).map((file, index) => {
             let fileObject = { path: path.join(dir, file.name), albumCover: false };
-            if (imageFiles.length > 0) fileObject.coverPath = imageFiles[index % imageFiles.length];
-            if (index === 0 && imageFiles.length <= 0) fileObject.albumCover = true;
+            if (coverDir.length >= 1) fileObject.coverPath = coverDir[index % coverDir.length];
+            if (index === 0 && coverDir.length <= 0 && isDisc === false) fileObject.albumCover = true;
             return fileObject;
         });
-        let directories = files.filter((file) => file.type === 'directory').map(folder => path.join(dir, folder.name));
         for (let i = 0, n = directories.length; i < n; i++) {
-            allFiles = allFiles.concat(await recursiveListDir(directories[i]));
+            allFiles = allFiles.concat(await recursiveListDir(directories[i], isDisc, coverDir));
         }
         return allFiles;
     } catch (err) {

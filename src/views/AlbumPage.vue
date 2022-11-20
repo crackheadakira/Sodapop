@@ -2,18 +2,61 @@
 import AlbumInfo from '../components/AlbumInfo.vue'
 import TrackList from '../components/TrackList.vue'
 import HorizontalMenu from '../components/HorizontalMenu.vue'
+import { getMetadata } from '../composables/getMetadata.js';
+import { fs } from '@empathize/framework';
+import { inject } from 'vue';
+const swal = inject('$swal');
+
+let albumInfo = $ref({ trackList: [], cover: new URL('/noAlbumArt.png', import.meta.url).href });
+
+async function getAlbumImage() {
+    try {
+        let metadata = await getMetadata();
+        let toast = swal.mixin({
+            toast: true,
+            showConfirmButton: false,
+            position: 'top-end',
+            timer: 3000,
+            html: `<p>Imported ${[...new Map(metadata.map(song => [song.album, song])).values()].length} album(s)</p>`,
+        })
+
+        toast.fire({
+            icon: "info",
+            title: "Successfull import!",
+        })
+        if (metadata !== null) {
+            console.log(metadata[0]);
+            albumInfo.albumName = metadata[0].album
+            albumInfo.artistName = metadata[0].artist
+            albumInfo.releaseYear = metadata[0].year
+            if (metadata[0]?.coverPath) {
+                let albumImage = new Uint8Array(await fs.read(metadata[0].coverPath, true));
+                let blob = new Blob([albumImage], { type: "image/jpeg" });
+                albumInfo.cover = URL.createObjectURL(blob);
+
+            } else if (metadata[0]?.albumCover) {
+                albumInfo.cover = `data:image/jpeg;base64,${metadata[0].albumCover}`;
+            }
+        }
+        let trackList = [];
+        for (let track of metadata) {
+            trackList.push({
+                trackName: track.title,
+                length: track.duration,
+            })
+        }
+        albumInfo.trackList = trackList;
+    } catch (e) {
+        console.error(e);
+    }
+}
 </script>
 
 <template>
-    <AlbumInfo :albumInfo="{
-        artistName: 'Joji',
-        albumName: 'SMITHEREENS',
-        releaseYear: '2022',
-        albumCover: 'https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6'
-    }" />
+    <button @click="getAlbumImage()">Directory Loading</button>
+    <AlbumInfo :albumInfo='albumInfo' />
     <HorizontalMenu />
-    <TrackList
-        :TrackList='[{ trackName: "Glimpse of Us", length: "3:53", }, { trackName: "Feeling Like The End", length: "1:42", }, { trackName: "Die For You", length: "3:31", }, { trackName: "Before The Day Is Over", length: "3:33" }, { trackName: "Dissolve", length: "2:57" }, { trackName: "Night Rider", length: "2:07" }, { trackName: "BLAHBLAHBLAH DEMO", length: "2:22" }, { trackName: "YUKON (INTERLUDE)", length: "2:21" }, { trackName: "1AM Freestyle", length: "1:53" }]' />
+    <TrackList :albumInfo='albumInfo' />
 </template>
 
 <style scoped>

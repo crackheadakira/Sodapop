@@ -9,6 +9,7 @@ export const usePlayerStore = defineStore({
         currentTime: 0,
         currentTrackLength: 0,
         currentVolume: 25,
+        currentTrack: {},
     }),
     actions: {
         toggleShuffle() {

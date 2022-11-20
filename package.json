@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@empathize/framework": "^1.4.15",
+    "@sweetalert2/theme-dark": "^5.0.14",
     "pinia": "^2.0.23",
     "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.41",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue-sweetalert2": "^5.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
