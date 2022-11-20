@@ -2,7 +2,7 @@
   "applicationId": "js.sodapop.player",
   "version": "1.0.0",
   "defaultMode": "window",
-  "documentRoot": "/dist/",
+  "documentRoot": "/dist",
   "url": "/",
   "enableServer": true,
   "enableNativeAPI": true,
@@ -21,7 +21,8 @@
       "minWidth": 800,
       "minHeight": 600,
       "icon": "/public/logo.png",
-      "enableInspector": true
+      "enableInspector": true,
+      "exitProcessOnClose": true
     }
   },
   "cli": {

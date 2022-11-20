@@ -1,18 +1,25 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getMetadata } from '../composables/getMetadata.js';
+import { dir, path, fetch, fs } from '@empathize/framework';
 
 let albumCover = $ref(null);
 
 async function getAlbumImage() {
-  let metadata = await getMetadata();
-  if (metadata !== null) {
-    console.log(metadata[0]);
-    if (metadata[0]?.coverPath) {
-      albumCover = `file://${metadata[0].coverPath}`;
-    } else if (metadata[0]?.albumCover) {
-      albumCover = `data:image/jpeg;base64,${metadata[0].albumCover}`;
+  try {
+    let metadata = await getMetadata();
+    if (metadata !== null) {
+      if (metadata[0]?.coverPath) {
+        console.log(metadata[0]);
+        let albumImage = new Uint8Array(await fs.read(metadata[0].coverPath, true));
+        let blob = new Blob([albumImage], { type: "image/jpeg" });
+        albumCover = URL.createObjectURL(blob);
+      } else if (metadata[0]?.albumCover) {
+        albumCover = `data:image/jpeg;base64,${metadata[0].albumCover}`;
+      }
     }
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -22,16 +29,12 @@ defineProps({
     required: true,
   },
 })
-
-onMounted(() => {
-  albumCover = albumInfo.albumCover;
-});
 </script>
 
 <template>
   <div id="mainBody">
     <div id="album">
-      <div v-if="albumCover">
+      <div>
         <img :src="albumCover" id="albumCover">
       </div>
       <div id="albumInfo">

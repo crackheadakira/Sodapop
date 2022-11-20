@@ -3,7 +3,7 @@ import { fs, path } from '@empathize/framework';
 export async function getMetadata() {
     try {
         let audioFiles = [];
-        let musicDir = await window.Neutralino.os.showFolderDialog('Select your music folder');
+        let musicDir = await Neutralino.os.showFolderDialog('Select your music folder');
         let timeStart = performance.now();
         let files = await recursiveListDir(musicDir);
         for (let i = 0, n = files.length; i < n; i++) {

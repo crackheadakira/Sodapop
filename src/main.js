@@ -7,12 +7,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './router';
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(),
     routes
 })
 
-const pinia = createPinia();
-pinia.use(piniaPersist);
+const pinia = createPinia()
+    .use(piniaPersist);
 
 createApp(App)
     .use(pinia)
@@ -25,4 +25,4 @@ if (!window.NL_PORT) {
     window.NL_TOKEN = config.accessToken;
 }
 
-window.Neutralino.init();
+Neutralino.init();
