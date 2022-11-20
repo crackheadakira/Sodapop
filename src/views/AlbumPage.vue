@@ -22,10 +22,9 @@ async function getAlbumImage() {
 
         toast.fire({
             icon: "info",
-            title: "Successfull import!",
+            title: "Successful import!",
         })
         if (metadata !== null) {
-            console.log(metadata[0]);
             albumInfo.albumName = metadata[0].album
             albumInfo.artistName = metadata[0].artist
             albumInfo.releaseYear = metadata[0].year
@@ -40,10 +39,8 @@ async function getAlbumImage() {
         }
         let trackList = [];
         for (let track of metadata) {
-            trackList.push({
-                trackName: track.title,
-                length: track.duration,
-            })
+            track.coverPath = albumInfo.cover;
+            trackList.push(track)
         }
         albumInfo.trackList = trackList;
     } catch (e) {

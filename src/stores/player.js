@@ -9,9 +9,12 @@ export const usePlayerStore = defineStore({
         currentTime: 0,
         currentTrackLength: 0,
         currentVolume: 25,
-        currentTrack: {},
+        currentTrack: { cover: '', title: '', artist: '' },
     }),
     actions: {
+        replaceTrack(track) {
+            this.currentTrack = track;
+        },
         toggleShuffle() {
             this.isShuffling = !this.isShuffling;
         },
@@ -34,7 +37,7 @@ export const usePlayerStore = defineStore({
     persist: {
         enabled: true,
         strategies: [
-            { storage: sessionStorage, paths: ['isShuffling', 'isRepeating', 'currentTime', 'currentTrackLength', 'currentVolume'] },
+            { storage: sessionStorage, paths: ['isShuffling', 'isRepeating', 'currentTime', 'currentTrackLength', 'currentVolume', 'currentTrack'] },
         ],
     }
 });

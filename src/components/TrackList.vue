@@ -3,9 +3,10 @@ import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
 import { watch } from 'vue';
 const player_store = usePlayerStore();
-watch(props.albumInfo, async () => {
-    console.log(props.albumInfo);
-})
+
+function trackChange(track) {
+    player_store.replaceTrack(track);
+}
 
 const props = defineProps({
     albumInfo: {
@@ -18,9 +19,9 @@ const props = defineProps({
 
 <template>
     <ol id="tracks">
-        <li v-for="Track in albumInfo.trackList">
-            {{ Track.trackName }}
-            <span>{{ convertTime(Track.length) }}</span>
+        <li v-for="Track in albumInfo.trackList" @click="trackChange(Track)">
+            {{ Track.title }}
+            <span>{{ convertTime(Track.duration) }}</span>
         </li>
     </ol>
 </template>

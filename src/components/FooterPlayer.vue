@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { onMounted, watch } from 'vue';
+import { fs } from '@empathize/framework';
 import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
 
@@ -7,15 +8,56 @@ const player_store = usePlayerStore();
 
 const audioTag = $ref(null);
 const trackInput = $ref(null);
+let audioSrc = $ref(bufferTrack(player_store.currentTrack?.fileLocation));
+let currentTrack = $ref(player_store.currentTrack || { cover: '/noAlbumArt.png', title: '', artist: '', album: '' });
 let audioVolume = $ref(player_store.currentVolume);
 let trackDisplayTime = $ref(convertTime(player_store.currentTime));
 let trackEndTime = $ref(convertTime(player_store.currentTrackLength));
 let playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 
+player_store.$subscribe((mutation, state) => {
+    let newTrack = state.currentTrack;
+    if (newTrack !== currentTrack) bufferTrack(newTrack.fileLocation);
+    currentTrack = newTrack;
+    updateLength(newTrack.duration);
+});
+
+async function bufferTrack(fileLocation) {
+    try {
+        console.log(fileLocation);
+        let startTime = performance.now();
+        let buffer = new Uint8Array(await fs.read(fileLocation, true));
+        console.log(`${Math.ceil(performance.now() - startTime)}ms - Finished Buffering track`);
+        let blob = new Blob([buffer], { type: 'audio/flac' });
+        audioSrc = URL.createObjectURL(blob);
+        audioTag.load();
+        audioTag.play();
+        setTimeout(() => {
+            audioSrc = URL.createObjectURL(blob);
+            audioTag.load();
+            audioTag.currentTime = player_store.currentTime;
+            audioTag.pause();
+            playUpdateIcon();
+        }, 5000);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 function playUpdateIcon() {
     player_store.togglePlay();
     playStateIcon = player_store.isPlaying ? "fa-pause" : "fa-play";
-    player_store.isPlaying ? audioTag.play() : audioTag.pause();
+    if (player_store.isPlaying) {
+        let playPromise = audioTag.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => { }).catch(error => { console.error(error); });
+        }
+    } else {
+        let pausePromise = audioTag.pause();
+        if (pausePromise !== undefined) {
+            pausePromise.then(_ => { }).catch(error => { console.error(error); });
+        }
+    }
 }
 
 function stopSong() {
@@ -56,11 +98,10 @@ onMounted(() => {
 <template>
     <div id="mainPlayer">
         <div id="songInfo">
-            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6"
-                id="albumCover">
+            <img :src="currentTrack.coverPath" id="albumCover">
             <div id="songInfoText">
-                <p class="clickableItemInfo" id="songName">Die For You</p>
-                <p class="clickableItemInfo" id="songArtist">Joji</p>
+                <p class="clickableItemInfo" id="songName">{{ currentTrack.title }}</p>
+                <p class="clickableItemInfo" id="songArtist">{{ currentTrack.artist }}</p>
             </div>
         </div>
         <div id="buttonsAndProgress">
@@ -81,7 +122,7 @@ onMounted(() => {
             <audio controls id="HTMLAudioPlayer" ref="audioTag"
                 @timeupdate="updateTime(Math.floor($event.target.currentTime))"
                 @play="updateLength(Math.floor($event.target.duration))">
-                <source src="/songs/dieforyou.flac" type="audio/flac">
+                <source :src="audioSrc">
             </audio>
         </div>
         <div id="volumeBar">
