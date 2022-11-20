@@ -15,8 +15,8 @@ const props = defineProps({
         <img :src="albumInfo.cover" id="albumCover">
       </div>
       <div id="albumInfo">
-        <div class="title">{{ albumInfo.albumName }} • {{ albumInfo.artistName }}</div>
-        <p>{{ albumInfo.releaseYear }}</p>
+        <div class="title">{{ albumInfo.albumName }}</div>
+        <p>{{ albumInfo.artistName }} - {{ albumInfo.releaseYear }}</p>
 
         <div id="mainButtons">
           <button class="danger-button">
