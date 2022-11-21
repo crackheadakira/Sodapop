@@ -1,7 +1,6 @@
 <script setup>
 import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
-import { watch } from 'vue';
 const player_store = usePlayerStore();
 
 function trackChange(track) {
@@ -20,13 +19,19 @@ const props = defineProps({
 <template>
     <ol id="tracks">
         <li v-for="Track in albumInfo.trackList" @click="trackChange(Track)">
-            {{ Track.title }}
+            <div>{{ Track.title }}</div>
             <span>{{ convertTime(Track.duration) }}</span>
         </li>
     </ol>
 </template>
 
 <style scoped>
+li div {
+    max-width: 1000px;
+    overflow-wrap: break-word;
+    display: inline-table;
+}
+
 #tracks {
     overflow-y: scroll;
     overflow-x: hidden;

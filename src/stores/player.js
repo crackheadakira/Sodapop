@@ -9,7 +9,7 @@ export const usePlayerStore = defineStore({
         currentTime: 0,
         currentTrackLength: 0,
         currentVolume: 25,
-        currentTrack: { cover: '', title: '', artist: '' },
+        currentTrack: { cover: '/noAlbumArt.png', title: '', artist: '' },
     }),
     actions: {
         replaceTrack(track) {

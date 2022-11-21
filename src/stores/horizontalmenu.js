@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export const useHorizontalMenuStore = defineStore({
     id: 'horizontalmenu',
     state: () => ({
-        activeID: "songs",
+        activeID: "TrackList",
     }),
     actions: {
         setActiveID(activeTarget) {

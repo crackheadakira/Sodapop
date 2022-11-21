@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, watch } from 'vue';
-import { path, dir } from '@empathize/framework';
 import { usePlayerStore } from '../stores/player';
 import { convertTime } from '../composables/convertTime.js';
 
@@ -8,8 +7,8 @@ const player_store = usePlayerStore();
 
 const audioTag = $ref(null);
 const trackInput = $ref(null);
-let audioSrc = $ref(player_store?.currentTrack ? bufferTrack(player_store.currentTrack) : null);
-let currentTrack = $ref(player_store.currentTrack || { cover: '/noAlbumArt.png', title: '', artist: '', album: '' });
+let audioSrc = $ref(null);
+let currentTrack = $ref(player_store.currentTrack);
 let audioVolume = $ref(player_store.currentVolume);
 let trackDisplayTime = $ref(convertTime(player_store.currentTime));
 let trackEndTime = $ref(convertTime(player_store.currentTrackLength));
@@ -17,65 +16,9 @@ let playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 
 player_store.$subscribe((mutation, state) => {
     let newTrack = state.currentTrack;
-    if (newTrack !== currentTrack) bufferTrack(newTrack);
     currentTrack = newTrack;
     updateLength(newTrack.duration);
 });
-
-let sourceBuffer = null;
-let bufferQueue = [];
-
-async function bufferTrack(track) {
-    try {
-        let stats = await Neutralino.filesystem.getStats(track.fileLocation);
-        let chunkSize = Math.floor(stats.size / 100);
-        let totalChunks = Math.ceil(stats.size / chunkSize);
-        let i = 1;
-        bufferQueue.push(await Neutralino.filesystem.readBinaryFile(track.fileLocation, { pos: 0, size: chunkSize }));
-
-        const mediaSource = new MediaSource();
-        audioTag.src = URL.createObjectURL(mediaSource);
-        mediaSource.addEventListener('sourceopen', handleSourceBuffer);
-
-        async function getNewChunk() {
-            if (sourceBuffer.updating || bufferQueue.length >= 1) {
-                if (i < totalChunks) {
-                    bufferQueue.push(await Neutralino.filesystem.readBinaryFile(track.fileLocation, { pos: i * chunkSize - 1, size: chunkSize }));
-                    i++;
-                }
-            } else {
-                sourceBuffer.appendBuffer(bufferQueue.shift());
-                audioTag.play();
-            }
-        }
-
-        function updateBuffer() {
-            if (bufferQueue.length > 0 && !sourceBuffer.updating) {
-                sourceBuffer.appendBuffer(bufferQueue.shift());
-            }
-        }
-
-        function handleSourceBuffer() {
-            sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-            sourceBuffer.mode = 'sequence';
-            sourceBuffer.appendBuffer(bufferQueue.shift());
-
-            sourceBuffer.addEventListener('update', function () {
-                console.log('update');
-                updateBuffer();
-            });
-
-            sourceBuffer.addEventListener('updateend', function () {
-                console.log('updateend');
-                updateBuffer();
-            });
-
-            getNewChunk();
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
 
 function playUpdateIcon() {
     player_store.togglePlay();
@@ -131,7 +74,7 @@ onMounted(() => {
 <template>
     <div id="mainPlayer">
         <div id="songInfo">
-            <img :src="currentTrack.coverPath" id="albumCover">
+            <img :src="currentTrack.cover" id="albumCover">
             <div id="songInfoText">
                 <p class="clickableItemInfo" id="songName">{{ currentTrack.title }}</p>
                 <p class="clickableItemInfo" id="songArtist">{{ currentTrack.artist }}</p>
@@ -305,6 +248,11 @@ audio {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 481px;
+}
+
+#trackEndLength {
+    width: 24px;
 }
 
 label {

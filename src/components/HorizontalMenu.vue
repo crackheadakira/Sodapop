@@ -1,6 +1,19 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, toRef } from 'vue';
 import { useHorizontalMenuStore } from '../stores/horizontalmenu';
+
+const props = defineProps({
+    albumInfo: {
+        type: Object,
+        required: true,
+    },
+})
+
+function truncate(str, n) {
+    return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+};
+
+const refAlbum = toRef(props, 'albumInfo');
 
 let horizontalMenuStore = useHorizontalMenuStore();
 
@@ -31,13 +44,15 @@ onMounted(() => {
     <div id="main">
         <div id="menuBar">
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="songs" data-active="false">
+                @mouseout="changeActiveStateLook('mouseout')" id="TrackList" data-active="false">
                 Songs
             </div>
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="songInfo"
                 @mouseout="changeActiveStateLook('mouseout')" data-active="false">Song Info</div>
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="moreByArtist" data-active="false">More by Joji</div>
+                @mouseout="changeActiveStateLook('mouseout')" id="moreByArtist" data-active="false">More by
+                {{ truncate(refAlbum.artist, 12) }}
+            </div>
         </div>
     </div>
 </template>

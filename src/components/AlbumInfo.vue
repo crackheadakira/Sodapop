@@ -5,7 +5,6 @@ const props = defineProps({
     required: true,
   },
 });
-
 </script>
 
 <template>
@@ -15,8 +14,8 @@ const props = defineProps({
         <img :src="albumInfo.cover" id="albumCover">
       </div>
       <div id="albumInfo">
-        <div class="title">{{ albumInfo.albumName }}</div>
-        <p>{{ albumInfo.artistName }} - {{ albumInfo.releaseYear }}</p>
+        <div class="title">{{ albumInfo.album }}</div>
+        <p>{{ albumInfo.artist }} - {{ albumInfo.year }}</p>
 
         <div id="mainButtons">
           <button class="danger-button">
