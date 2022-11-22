@@ -7,7 +7,7 @@ const albumList = $ref(recently_played_store.recentAlbums);
 const artistList = $ref(recently_played_store.recentArtists);
 
 function consoleData() {
-    console.log(trackList, albumList, artistList);
+    console.log(albumList.length);
 }
 
 recently_played_store.$subscribe((mutation, state) => {
