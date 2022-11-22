@@ -23,7 +23,7 @@ const props = defineProps({
 
 <template>
     <ol id="tracks">
-        <li v-for="Track in albumInfo.trackList" @click="trackChange(Track)">
+        <li v-for="Track in albumInfo.trackList" @dblclick="trackChange(Track)">
             <div>{{ Track.title }}</div>
             <span>{{ convertTime(Track.duration) }}</span>
         </li>

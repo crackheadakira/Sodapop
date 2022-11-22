@@ -1,4 +1,4 @@
-import { fs } from '@empathize/framework';
+import { fs, path } from '@empathize/framework';
 
 /** Fetches one cover per album and then gives it to the rest of the songs in the album
  * @param {object} data The object containing all the metadata.
@@ -29,12 +29,41 @@ export async function uniqueAlbumCover(data) {
 }
 
 async function makeAlbumImage(track, artExists) {
+    let newAlbumCover = path.join('artists', 'covers', `${track.artist} - ${track.album}.jpg`);
     if (artExists) {
         let albumImage = new Uint8Array(await fs.read(track.coverPath, true));
         let blob = new Blob([albumImage], { type: "image/jpeg" });
-        let urlBlob = (URL.createObjectURL(blob));
-        return urlBlob;
+        optimizeImageForSaving(blob).then(async (response) => {
+            await Neutralino.filesystem.writeBinaryFile(newAlbumCover, response);
+        })
+        return newAlbumCover;
     } else if (!artExists) {
-        return `data:image/jpeg;base64,${track.albumCover}`
+        let base64Blob = await fetch(`data:image/jpeg;base64,${track.albumCover}`).then(r => r.blob());
+        optimizeImageForSaving(base64Blob).then(async (response) => {
+            await Neutralino.filesystem.writeBinaryFile(newAlbumCover, response);
+        })
+        return newAlbumCover;
+    }
+}
+
+function optimizeImageForSaving(blob) {
+    try {
+        const blobImg = new Image();
+        const result = new Promise((resolve) => {
+            blobImg.src = URL.createObjectURL(blob);
+            blobImg.onload = async function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = 500;
+                canvas.height = 500;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(blobImg, 0, 0, 500, 500);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+                let base64Blob = await fetch(dataURL).then(r => r.blob());
+                resolve(await base64Blob.arrayBuffer());
+            };
+        });
+        return result;
+    } catch (err) {
+        return null;
     }
 }
