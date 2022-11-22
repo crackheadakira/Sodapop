@@ -47,8 +47,6 @@ onMounted(() => {
                 @mouseout="changeActiveStateLook('mouseout')" id="TrackList" data-active="false">
                 Songs
             </div>
-            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="songInfo"
-                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Song Info</div>
             <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
                 @mouseout="changeActiveStateLook('mouseout')" id="moreByArtist" data-active="false">More by
                 {{ truncate(refAlbum.artist, 12) }}

@@ -44,12 +44,8 @@ function stopSong() {
 function updateTime(time, seek = false) {
     player_store.updateTime(time);
     trackDisplayTime = convertTime(time);
-    if (time === player_store.currentTrackLength) {
-        stopSong();
-    }
-    if (seek) {
-        audioTag.fastSeek(time);
-    }
+    if (time === player_store.currentTrackLength) stopSong();
+    if (seek) audioTag.fastSeek(time);
 }
 
 function updateLength(length) {

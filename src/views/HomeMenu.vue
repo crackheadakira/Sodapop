@@ -6,10 +6,6 @@ const trackList = $ref(recently_played_store.recentTracks);
 const albumList = $ref(recently_played_store.recentAlbums);
 const artistList = $ref(recently_played_store.recentArtists);
 
-function consoleData() {
-    console.log(albumList.length);
-}
-
 recently_played_store.$subscribe((mutation, state) => {
     trackList = state.recentTracks;
     albumList = state.recentAlbums;
@@ -28,7 +24,7 @@ recently_played_store.$subscribe((mutation, state) => {
                     <div class="itemName clickableItemInfo">{{ Track.title }}</div>
                     <div class="artistName clickableItemInfo">{{ Track.artist }}</div>
                 </div>
-                <div class="seeMoreItem" @click="consoleData">See more...</div>
+                <div class="seeMoreItem">See more...</div>
             </div>
         </div>
 

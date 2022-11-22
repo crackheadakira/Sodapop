@@ -4,10 +4,12 @@ import AlbumInfo from '../components/AlbumInfo.vue'
 import TrackList from '../components/TrackList.vue'
 import moreByArtist from '../components/MoreByArtist.vue'
 
+import { uniqueAlbumCover } from '../composables/uniqueAlbumCover'
+import { separateMetadata } from '../composables/separateMetadata'
 import { useHorizontalMenuStore } from '../stores/horizontalmenu';
 import { getMetadata } from '../composables/getMetadata.js';
-import { fs } from '@empathize/framework';
-import { inject, shallowRef } from 'vue';
+import { path } from '@empathize/framework';
+import { inject } from 'vue';
 
 const swal = inject('$swal');
 let albumInfo = $ref({ trackList: [], cover: '/noAlbumArt.png', artist: 'Unknown', album: 'Unknown', year: 'Unknown', otherAlbums: [] });
@@ -30,43 +32,6 @@ function getTabsIndex(activeID) {
 horizontalMenuStore.$subscribe((mutation, state) => {
     currentTab = tabs[getTabsIndex(state.activeID)];
 });
-
-/** Fetches one cover per album and then gives it to the rest of the songs in the album
- * @param {object} data The object containing all the metadata.
- * @returns {array} Returns an array where all the songs have their respective cover.
- */
-async function uniqueAlbumCover(data) {
-    let fixedData = [];
-    // Gets one track per album
-    let unique = [...new Map(data.map(song => [song.album, song])).values()];
-
-    // Then fetches one album cover per album
-    for (let i = 0; i < unique.length; i++) {
-        // Finds the album the track should be in
-        let matching = data.filter(res => (res.album == unique[i].album) && (res.artist == unique[i].artist));
-        // Checks if the album has a cover image in the folder
-        if (matching[0]?.coverPath) {
-            matching[0].cover = await makeAlbumImage(matching[0], true);
-        } else {
-            matching[0].cover = await makeAlbumImage(matching[0], false);
-        }
-        for (let j = 0; j < matching.length; j++) {
-            matching[j].cover = matching[0].cover;
-        }
-        fixedData.push(matching);
-    }
-    return fixedData.flat();
-}
-
-async function makeAlbumImage(track, artExists) {
-    if (artExists) {
-        let albumImage = new Uint8Array(await fs.read(track.coverPath, true));
-        let blob = new Blob([albumImage], { type: "image/jpeg" });
-        return URL.createObjectURL(blob);
-    } else {
-        return `data:image/jpeg;base64,${track.albumCover}`
-    }
-}
 
 async function getAlbumImage() {
     try {
@@ -94,6 +59,9 @@ async function getAlbumImage() {
             albumInfo.artist = metadata[0].artist
             albumInfo.year = metadata[0].year
             otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];
+
+            let separatedMetadata = separateMetadata(await uniqueAlbumCover(metadata, false));
+            await Neutralino.filesystem.appendFile(path.join('artists', separatedMetadata[0].artist + '.json'), JSON.stringify(separatedMetadata[0]));
 
         }
     } catch (e) {

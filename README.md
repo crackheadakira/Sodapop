@@ -1,4 +1,4 @@
-# Sodapop, a local file music player with a sleek modern UI. 
+# Sodapop, a local file music player with a sleek modern UI. (Linux only for the time being)
 ## This is a work in progress, so there may be bugs. If you do find any, please report them in the Issues tab.
 
 <p align="center"><img src="https://i.imgur.com/SjYdnLq.png" width="100%"/></p>
