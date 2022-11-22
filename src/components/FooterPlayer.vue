@@ -16,8 +16,10 @@ let playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
 
 player_store.$subscribe((mutation, state) => {
     let newTrack = state.currentTrack;
-    currentTrack = newTrack;
-    updateLength(newTrack.duration);
+    if (newTrack !== currentTrack) {
+        currentTrack = newTrack;
+        updateLength(newTrack.duration);
+    }
 });
 
 function playUpdateIcon() {

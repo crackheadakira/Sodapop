@@ -5,7 +5,7 @@ import { fs } from '@empathize/framework';
  * @returns {array} Returns an array where all the songs have their respective cover.
  * @async
  */
-export async function uniqueAlbumCover(data, toBlob = true) {
+export async function uniqueAlbumCover(data) {
     let fixedData = [];
     // Gets one track per album
     let unique = [...new Map(data.map(song => [song.album, song])).values()];
@@ -16,9 +16,9 @@ export async function uniqueAlbumCover(data, toBlob = true) {
         let matching = data.filter(res => (res.album == unique[i].album) && (res.artist == unique[i].artist));
         // Checks if the album has a cover image in the folder
         if (matching[0]?.coverPath) {
-            matching[0].cover = await makeAlbumImage(matching[0], true, toBlob);
+            matching[0].cover = await makeAlbumImage(matching[0], true);
         } else {
-            matching[0].cover = await makeAlbumImage(matching[0], false, toBlob);
+            matching[0].cover = await makeAlbumImage(matching[0], false);
         }
         for (let j = 0; j < matching.length; j++) {
             matching[j].cover = matching[0].cover;
@@ -28,24 +28,13 @@ export async function uniqueAlbumCover(data, toBlob = true) {
     return fixedData.flat();
 }
 
-async function makeAlbumImage(track, artExists, toBlob) {
+async function makeAlbumImage(track, artExists) {
     if (artExists) {
         let albumImage = new Uint8Array(await fs.read(track.coverPath, true));
         let blob = new Blob([albumImage], { type: "image/jpeg" });
-        if (toBlob) {
-            return URL.createObjectURL(blob);
-        } else {
-            return `data:image/jpeg;base64,${await blobToBase64(blob)}`;
-        }
+        let urlBlob = (URL.createObjectURL(blob));
+        return urlBlob;
     } else if (!artExists) {
         return `data:image/jpeg;base64,${track.albumCover}`
     }
-}
-
-function blobToBase64(blob) {
-    return new Promise((resolve, _) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
-    });
 }

@@ -1,5 +1,6 @@
 <script setup>
 import { useRecentlyPlayedStore } from '../stores/recentlyplayed';
+import { onMounted } from 'vue'
 let recently_played_store = useRecentlyPlayedStore();
 
 const trackList = $ref(recently_played_store.recentTracks);
@@ -11,43 +12,39 @@ recently_played_store.$subscribe((mutation, state) => {
     albumList = state.recentAlbums;
     artistList = state.recentArtists;
 });
-
 </script>
 
 <template>
     <div id="homeMenu">
-        <div id="recentSongs">
+        <div id="recentSongs" v-if="trackList.length > 0">
             <h2>Recently Played Songs</h2>
             <div class="recentCoasterMenu">
-                <div class="coasterItem" v-for="Track in trackList.slice(0, 4)">
-                    <router-link to="/album/{{ Track.album }}"><img class="albumCover" :src="Track.cover"></router-link>
+                <div class="coasterItem" v-for="Track in trackList">
+                    <img class="albumCover" :src="Track.cover">
                     <div class="itemName clickableItemInfo">{{ Track.title }}</div>
                     <div class="artistName clickableItemInfo">{{ Track.artist }}</div>
                 </div>
-                <div class="seeMoreItem">See more...</div>
             </div>
         </div>
 
-        <div id="recentAlbums">
+        <div id="recentAlbums" v-if="albumList.length > 0">
             <h2>Recently Played Albums</h2>
             <div class="recentCoasterMenu">
-                <div class="coasterItem" v-for="Album in albumList.slice(0, 4)">
+                <div class="coasterItem" v-for="Album in albumList">
                     <img class="albumCover" :src="Album.cover">
                     <div class="itemName clickableItemInfo">{{ Album.album }}</div>
                     <div class="artistName clickableItemInfo">{{ Album.artist }}</div>
                 </div>
-                <div class="seeMoreItem">See more...</div>
             </div>
         </div>
 
-        <div id="recentArtists">
+        <div id="recentArtists" v-if="artistList.length > 0">
             <h2>Recently Played Artists</h2>
             <div class="recentCoasterMenu">
-                <div class="coasterItem" v-for="Artist in artistList.slice(0, 4)">
+                <div class="coasterItem" v-for="Artist in artistList">
                     <img class="albumCover" :src="Artist.cover">
                     <div class="itemName clickableItemInfo">{{ Artist.artist }}</div>
                 </div>
-                <div class="seeMoreItem">See more...</div>
             </div>
         </div>
     </div>
@@ -69,7 +66,11 @@ recently_played_store.$subscribe((mutation, state) => {
     gap: 30px;
     margin: 20px;
     border-radius: 10px;
-    width: 1020px;
+    width: 1040px;
+    max-width: 1040px;
+    overflow: hidden;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
 }
 
 .seeMoreItem {
@@ -103,6 +104,7 @@ recently_played_store.$subscribe((mutation, state) => {
 
 .albumCover {
     height: 180px;
+    width: 180px;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     cursor: pointer;
@@ -115,11 +117,5 @@ recently_played_store.$subscribe((mutation, state) => {
 
 .albumCover:hover {
     filter: brightness(85%);
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
 }
 </style>

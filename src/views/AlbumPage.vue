@@ -60,8 +60,13 @@ async function getAlbumImage() {
             albumInfo.year = metadata[0].year
             otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];
 
-            let separatedMetadata = separateMetadata(await uniqueAlbumCover(metadata, false));
-            await Neutralino.filesystem.appendFile(path.join('artists', separatedMetadata[0].artist + '.json'), JSON.stringify(separatedMetadata[0]));
+            // let separatedMetadata = separateMetadata(metadata);
+            // console.log(separatedMetadata);
+            // let startTime = performance.now();
+            // for (let artist of separatedMetadata) {
+            //     await Neutralino.filesystem.appendFile(path.join('artists', artist.artist + '.json'), JSON.stringify(artist));
+            // }
+            // console.log(`Imported ${separatedMetadata.length} artist(s) in ${performance.now() - startTime}ms`);
 
         }
     } catch (e) {
