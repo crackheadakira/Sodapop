@@ -1,44 +1,21 @@
 <script setup>
-const albumCover = "https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6";
-const trackList = ["Die For You", "BLAHBLAHBLAH DEMO", "Glimpse of Us", "1AM Freestyle"];
-const albumList = [
-    {
-        name: "After Hours",
-        cover: "https://lastfm.freetls.fastly.net/i/u/770x0/7d957bd27dd562bee7aaa89eafa0bbe6.jpg#7d957bd27dd562bee7aaa89eafa0bbe6",
-        artist: "The Weeknd",
-    },
-    {
-        name: "SMITHEREENS",
-        cover: "https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6",
-        artist: "Joji",
-    },
-    {
-        name: "Nectar",
-        cover: "https://lastfm.freetls.fastly.net/i/u/770x0/71da7e08ec27c0c83b1133c0e6d1ca51.jpg#71da7e08ec27c0c83b1133c0e6d1ca51",
-        artist: "Joji",
-    },
-    {
-        name: "Face The Sun",
-        cover: "https://lastfm.freetls.fastly.net/i/u/770x0/a6ca584491130520db4092d04c32e907.jpg#a6ca584491130520db4092d04c32e907",
-        artist: "Seventeen",
-    }
-];
+import { useRecentlyPlayedStore } from '../stores/recentlyplayed';
+let recently_played_store = useRecentlyPlayedStore();
 
-const artistList = [{
-    name: "Joji",
-    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/6f2784172913db6982b2f6de18b837f6.jpg#6f2784172913db6982b2f6de18b837f6",
-}, {
-    name: "Xdinary Heroes",
-    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/048f22b0516b92c7f29663c9008aac43.jpg#048f22b0516b92c7f29663c9008aac43",
-},
-{
-    name: "The Weeknd",
-    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/7d957bd27dd562bee7aaa89eafa0bbe6.jpg#7d957bd27dd562bee7aaa89eafa0bbe6",
-},
-{
-    name: "Seventeen",
-    cover: "https://lastfm.freetls.fastly.net/i/u/770x0/a6ca584491130520db4092d04c32e907.jpg#a6ca584491130520db4092d04c32e907",
-}];
+const trackList = $ref(recently_played_store.recentTracks);
+const albumList = $ref(recently_played_store.recentAlbums);
+const artistList = $ref(recently_played_store.recentArtists);
+
+function consoleData() {
+    console.log(trackList, albumList, artistList);
+}
+
+recently_played_store.$subscribe((mutation, state) => {
+    trackList = state.recentTracks;
+    albumList = state.recentAlbums;
+    artistList = state.recentArtists;
+});
+
 </script>
 
 <template>
@@ -47,11 +24,11 @@ const artistList = [{
             <h2>Recently Played Songs</h2>
             <div class="recentCoasterMenu">
                 <div class="coasterItem" v-for="Track in trackList.slice(0, 4)">
-                    <router-link to="/album/SMITHEREENS"><img class="albumCover" :src="albumCover"></router-link>
-                    <div class="itemName clickableItemInfo">{{ Track }}</div>
-                    <div class="artistName clickableItemInfo">Joji</div>
+                    <router-link to="/album/{{ Track.album }}"><img class="albumCover" :src="Track.cover"></router-link>
+                    <div class="itemName clickableItemInfo">{{ Track.title }}</div>
+                    <div class="artistName clickableItemInfo">{{ Track.artist }}</div>
                 </div>
-                <div class="seeMoreItem">See more...</div>
+                <div class="seeMoreItem" @click="consoleData">See more...</div>
             </div>
         </div>
 
@@ -60,7 +37,7 @@ const artistList = [{
             <div class="recentCoasterMenu">
                 <div class="coasterItem" v-for="Album in albumList.slice(0, 4)">
                     <img class="albumCover" :src="Album.cover">
-                    <div class="itemName clickableItemInfo">{{ Album.name }}</div>
+                    <div class="itemName clickableItemInfo">{{ Album.album }}</div>
                     <div class="artistName clickableItemInfo">{{ Album.artist }}</div>
                 </div>
                 <div class="seeMoreItem">See more...</div>
@@ -72,7 +49,7 @@ const artistList = [{
             <div class="recentCoasterMenu">
                 <div class="coasterItem" v-for="Artist in artistList.slice(0, 4)">
                     <img class="albumCover" :src="Artist.cover">
-                    <div class="itemName clickableItemInfo">{{ Artist.name }}</div>
+                    <div class="itemName clickableItemInfo">{{ Artist.artist }}</div>
                 </div>
                 <div class="seeMoreItem">See more...</div>
             </div>
@@ -133,7 +110,9 @@ const artistList = [{
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
+    -ms-user-select: none;
     filter: brightness(100%);
     transition: 250ms ease;
 }

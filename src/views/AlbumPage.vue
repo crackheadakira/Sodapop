@@ -31,11 +31,20 @@ horizontalMenuStore.$subscribe((mutation, state) => {
     currentTab = tabs[getTabsIndex(state.activeID)];
 });
 
+/** Fetches one cover per album and then gives it to the rest of the songs in the album
+ * @param {object} data The object containing all the metadata.
+ * @returns {array} Returns an array where all the songs have their respective cover.
+ */
 async function uniqueAlbumCover(data) {
     let fixedData = [];
+    // Gets one track per album
     let unique = [...new Map(data.map(song => [song.album, song])).values()];
+
+    // Then fetches one album cover per album
     for (let i = 0; i < unique.length; i++) {
+        // Finds the album the track should be in
         let matching = data.filter(res => (res.album == unique[i].album) && (res.artist == unique[i].artist));
+        // Checks if the album has a cover image in the folder
         if (matching[0]?.coverPath) {
             matching[0].cover = await makeAlbumImage(matching[0], true);
         } else {
@@ -84,7 +93,6 @@ async function getAlbumImage() {
             albumInfo.album = metadata[0].album
             albumInfo.artist = metadata[0].artist
             albumInfo.year = metadata[0].year
-            console.log(otherAlbums);
             otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];
 
         }

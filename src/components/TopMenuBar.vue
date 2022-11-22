@@ -31,14 +31,17 @@ onMounted(() => {
     <div id="homeMenuBar">
         <i class="fa-solid fa-arrow-left" @click="$router.back()"></i>
         <div id="menuBar">
-            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="home" data-active="false">
+            <router-link tag="div" to="/" @click="setTarget($event.target)"
+                @mouseover="changeActiveStateLook('mouseover')" @mouseout="changeActiveStateLook('mouseout')" id="home"
+                data-active="false">
                 Home
-            </div>
-            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')" id="albums"
-                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Albums</div>
-            <div @click="setTarget($event.target)" @mouseover="changeActiveStateLook('mouseover')"
-                @mouseout="changeActiveStateLook('mouseout')" id="artists" data-active="false">Artists</div>
+            </router-link>
+            <router-link tag="div" to="/album/aa" @click="setTarget($event.target)"
+                @mouseover="changeActiveStateLook('mouseover')" id="albums"
+                @mouseout="changeActiveStateLook('mouseout')" data-active="false">Albums</router-link>
+            <router-link tag="div" to="/" @click="setTarget($event.target)"
+                @mouseover="changeActiveStateLook('mouseover')" @mouseout="changeActiveStateLook('mouseout')"
+                id="artists" data-active="false">Artists</router-link>
         </div>
         <i class="fa-solid fa-arrow-right" @click="$router.forward()"></i>
     </div>
@@ -72,7 +75,9 @@ i:hover {
     border-radius: 500px;
 }
 
-#menuBar div {
+#menuBar a {
+    color: white;
+    text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,19 +91,19 @@ i:hover {
     -ms-user-select: none;
 }
 
-#menuBar div:hover {
+#menuBar a:hover {
     background: white;
     color: #282828;
     border-radius: 500px;
 }
 
-#menuBar div[data-active="true"] {
+#menuBar a[data-active="true"] {
     background: white;
     color: #282828;
     border-radius: 500px;
 }
 
-#menuBar div[data-active="semiactive"] {
+#menuBar a[data-active="semiactive"] {
     background: #222222;
     color: white;
     border-radius: 500px;

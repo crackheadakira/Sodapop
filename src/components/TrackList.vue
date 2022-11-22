@@ -1,10 +1,15 @@
 <script setup>
 import { usePlayerStore } from '../stores/player';
+import { useRecentlyPlayedStore } from '../stores/recentlyplayed';
 import { convertTime } from '../composables/convertTime.js';
 const player_store = usePlayerStore();
+const recently_played_store = useRecentlyPlayedStore();
 
 function trackChange(track) {
     player_store.replaceTrack(track);
+    recently_played_store.addTrack({ title: track.title, artist: track.artist, album: track.album, cover: track.cover });
+    recently_played_store.addAlbum({ artist: track.artist, album: track.album, cover: track.cover });
+    recently_played_store.addArtist({ artist: track.artist, cover: track.cover });
 }
 
 const props = defineProps({
