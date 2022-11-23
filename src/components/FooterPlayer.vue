@@ -7,12 +7,40 @@ const player_store = usePlayerStore();
 
 const audioTag = $ref(null);
 const trackInput = $ref(null);
+const volumeInput = $ref(null);
 let audioSrc = $ref(null);
 let currentTrack = $ref(player_store.currentTrack);
 let audioVolume = $ref(player_store.currentVolume);
 let trackDisplayTime = $ref(convertTime(player_store.currentTime));
 let trackEndTime = $ref(convertTime(player_store.currentTrackLength));
-let playStateIcon = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
+let playStateIconState = $ref(player_store.isPlaying ? "fa-pause" : "fa-play");
+
+watch($$(audioTag), (newAudioTag) => {
+    newAudioTag.addEventListener('timeupdate', () => {
+        player_store.updateTime(newAudioTag.currentTime);
+        trackDisplayTime = convertTime(newAudioTag.currentTime);
+    });
+    newAudioTag.addEventListener('ended', () => {
+        stopSong();
+    });
+    newAudioTag.addEventListener('seek', () => {
+        player_store.updateTime(newAudioTag.currentTime);
+        trackDisplayTime = convertTime(newAudioTag.currentTime);
+    });
+});
+
+watch($$(trackInput), (newTrackInput) => {
+    newTrackInput.addEventListener('input', () => {
+        player_store.updateTime(newTrackInput.value);
+        updateTime(newTrackInput.value, true);
+    });
+});
+
+watch($$(volumeInput), (volumeInput) => {
+    volumeInput.addEventListener('input', () => {
+        updateVolume(volumeInput.value);
+    });
+});
 
 player_store.$subscribe((mutation, state) => {
     let newTrack = state.currentTrack;
@@ -24,7 +52,7 @@ player_store.$subscribe((mutation, state) => {
 
 function playUpdateIcon() {
     player_store.togglePlay();
-    playStateIcon = player_store.isPlaying ? "fa-pause" : "fa-play";
+    playStateIconState = player_store.isPlaying ? "fa-pause" : "fa-play";
     if (player_store.isPlaying) {
         let playPromise = audioTag.play();
         if (playPromise !== undefined) {
@@ -46,7 +74,6 @@ function stopSong() {
 function updateTime(time, seek = false) {
     player_store.updateTime(time);
     trackDisplayTime = convertTime(time);
-    if (time === player_store.currentTrackLength) stopSong();
     if (seek) audioTag.fastSeek(time);
 }
 
@@ -79,30 +106,29 @@ onMounted(() => {
             </div>
         </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">{{ trackDisplayTime }}<input @change="updateTime($event.target.value, true)"
-                    ref="trackInput" type="range" :max="player_store.currentTrackLength" :value=player_store.currentTime
-                    class="slider" id="musicProgressBar"><label id="trackEndLength">{{ trackEndTime }}</label>
+            <label id="trackStartLength">{{ trackDisplayTime }}
+                <input ref="trackInput" type="range" :max="player_store.currentTrackLength"
+                    :value=player_store.currentTime class="slider" id="musicProgressBar"><label id="trackEndLength">{{
+                            trackEndTime
+                    }}</label>
             </label>
             <div id="playerButtons">
                 <i @click="player_store.toggleShuffle()" class="fa-solid fa-shuffle fa-sm footerPlayerButton"
                     id="shuffleButton" :class="{ activePlayerButton: player_store.isShuffling }"></i>
                 <i class="fa-solid fa-backward fa-sm footerPlayerButton"></i>
-                <i @click="playUpdateIcon()" :class="[playStateIcon]" class="fa-solid footerPlayerButton fa-fw"
+                <i @click="playUpdateIcon()" :class="[playStateIconState]" class="fa-solid footerPlayerButton fa-fw"
                     id="mainPlayButton"></i>
                 <i class="fa-solid fa-forward fa-sm footerPlayerButton"></i>
                 <i @click="player_store.toggleRepeat()" class="fa-solid fa-repeat fa-sm footerPlayerButton"
                     :class="{ activePlayerButton: player_store.isRepeating }" id="repeatButton"></i>
             </div>
-            <audio controls id="HTMLAudioPlayer" ref="audioTag"
-                @timeupdate="updateTime(Math.floor($event.target.currentTime))"
-                @play="updateLength(Math.floor($event.target.duration))">
+            <audio controls id="HTMLAudioPlayer" ref="audioTag">
                 <source :src="audioSrc">
             </audio>
         </div>
         <div id="volumeBar">
             <i class="fa-solid fa-volume-low"></i>
-            <input type="range" min="1" max="100" :value=audioVolume @change="updateVolume($event.target.value)"
-                class="slider" id="volumeSlider">
+            <input type="range" min="1" max="100" :value=audioVolume ref="volumeInput" class="slider" id="volumeSlider">
         </div>
     </div>
 </template>

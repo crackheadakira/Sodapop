@@ -15,7 +15,7 @@ export async function separateMetadata(metadata) {
             artistResult.push({
                 artist: totalArtists[i].artist,
                 albumName: totalAlbums[j].album,
-                albumCover: newAlbumCover,
+                albumCover: totalAlbums[j].cover,
                 tracks: matchingTracks,
                 genre: totalAlbums[j].genre,
                 year: totalAlbums[j].year,
@@ -24,28 +24,4 @@ export async function separateMetadata(metadata) {
         finalResult.push({ artist: totalArtists[i].artist, albums: artistResult });
     }
     return finalResult;
-}
-
-async function optimizeImageForSaving(url) {
-    try {
-        const data = await fetch(url);
-        const blob = await data.blob();
-        const blobImg = new Image();
-        const result = new Promise((resolve) => {
-            blobImg.src = URL.createObjectURL(blob);
-            blobImg.onload = async function () {
-                const canvas = document.createElement('canvas');
-                canvas.width = 500;
-                canvas.height = 500;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(blobImg, 0, 0, 500, 500);
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
-                let base64Blob = await fetch(dataURL).then(r => r.blob());
-                resolve(await base64Blob.arrayBuffer());
-            };
-        });
-        return result;
-    } catch (err) {
-        return null;
-    }
 }

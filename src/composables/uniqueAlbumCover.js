@@ -28,21 +28,21 @@ export async function uniqueAlbumCover(data) {
     return fixedData.flat();
 }
 
-async function makeAlbumImage(track, artExists) {
-    let newAlbumCover = path.join('artists', 'covers', `${track.artist} - ${track.album}.jpg`);
-    if (artExists) {
+async function makeAlbumImage(track, coverExists) {
+    let newAlbumCover = path.join('artists', 'covers', `${track.artist.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')} - ${track.album.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')}.jpg`);
+    if (coverExists) {
         let albumImage = new Uint8Array(await fs.read(track.coverPath, true));
         let blob = new Blob([albumImage], { type: "image/jpeg" });
         optimizeImageForSaving(blob).then(async (response) => {
             await Neutralino.filesystem.writeBinaryFile(newAlbumCover, response);
         })
-        return newAlbumCover;
-    } else if (!artExists) {
+        return "/" + newAlbumCover;
+    } else if (!coverExists) {
         let base64Blob = await fetch(`data:image/jpeg;base64,${track.albumCover}`).then(r => r.blob());
         optimizeImageForSaving(base64Blob).then(async (response) => {
             await Neutralino.filesystem.writeBinaryFile(newAlbumCover, response);
         })
-        return newAlbumCover;
+        return "/" + newAlbumCover;
     }
 }
 
@@ -53,11 +53,11 @@ function optimizeImageForSaving(blob) {
             blobImg.src = URL.createObjectURL(blob);
             blobImg.onload = async function () {
                 const canvas = document.createElement('canvas');
-                canvas.width = 500;
-                canvas.height = 500;
+                canvas.width = 300;
+                canvas.height = 300;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(blobImg, 0, 0, 500, 500);
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+                ctx.drawImage(blobImg, 0, 0, 300, 300);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.8);
                 let base64Blob = await fetch(dataURL).then(r => r.blob());
                 resolve(await base64Blob.arrayBuffer());
             };
