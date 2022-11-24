@@ -13,6 +13,6 @@ import TopMenuBarVue from './components/TopMenuBar.vue';
 
 <style scoped>
 #routerViewMiddle {
-  max-height: calc(100% - 61px - 113px);
+  height: calc(100% - 61px - 113px);
 }
 </style>

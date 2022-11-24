@@ -2,7 +2,7 @@
  * @param {object} metadata The object containing all the metadata.
  * @returns {array}
  */
-export async function separateMetadata(metadata) {
+export async function cacheMetadata(metadata) {
     let totalArtists = [...new Map(metadata.map(track => [track.artist, track])).values()];
     let finalResult = [];
 

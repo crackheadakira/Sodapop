@@ -29,7 +29,10 @@ onMounted(() => {
 
 <template>
     <div id="homeMenuBar">
-        <i class="fa-solid fa-arrow-left" @click="$router.back()"></i>
+        <div id="historyArrows">
+            <i class="fa-solid fa-arrow-left fa-lg" @click="$router.back()"></i>
+            <i class="fa-solid fa-arrow-right fa-lg" @click="$router.forward()"></i>
+        </div>
         <div id="menuBar">
             <router-link tag="div" to="/" @click="setTarget($event.target)"
                 @mouseover="changeActiveStateLook('mouseover')" @mouseout="changeActiveStateLook('mouseout')" id="home"
@@ -43,13 +46,23 @@ onMounted(() => {
                 @mouseover="changeActiveStateLook('mouseover')" @mouseout="changeActiveStateLook('mouseout')"
                 id="artists" data-active="false">Artists</router-link>
         </div>
-        <i class="fa-solid fa-arrow-right" @click="$router.forward()"></i>
+        <router-link tag="div" id="settings" to="/settings"><i class="fa-solid fa-gear fa-lg"></i></router-link>
     </div>
 </template>
 
 <style scoped>
+a {
+    color: white;
+}
+
 i:hover {
     filter: brightness(85%);
+    cursor: pointer;
+}
+
+#settings {
+    position: absolute;
+    right: 25px;
 }
 
 #homeMenuBar {
@@ -60,6 +73,15 @@ i:hover {
     padding: 10px;
     background-color: #171717;
     border-bottom: 1px solid #272727;
+}
+
+#historyArrows {
+    position: absolute;
+    left: 25px;
+}
+
+#historyArrows i {
+    margin: 0 10px;
 }
 
 #menuBar {
@@ -76,7 +98,6 @@ i:hover {
 }
 
 #menuBar a {
-    color: white;
     text-decoration: none;
     display: flex;
     align-items: center;

@@ -5,7 +5,7 @@ import TrackList from '../components/TrackList.vue'
 import moreByArtist from '../components/MoreByArtist.vue'
 
 import { uniqueAlbumCover } from '../composables/uniqueAlbumCover'
-import { separateMetadata } from '../composables/separateMetadata'
+import { cacheMetadata } from '../composables/separateMetadata'
 import { useHorizontalMenuStore } from '../stores/horizontalmenu';
 import { getMetadata } from '../composables/getMetadata.js';
 import { path } from '@empathize/framework';
@@ -60,14 +60,7 @@ async function getAlbumImage() {
             albumInfo.year = metadata[0].year
             otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];
 
-            // let separatedMetadata = await separateMetadata(metadata);
-            // console.log(separatedMetadata);
-            // let startTime = performance.now();
-            // for (let artist of separatedMetadata) {
-            //     await Neutralino.filesystem.appendFile(path.join('artists', 'json', artist.artist + '.json'), JSON.stringify(artist));
-            // }
-            // console.log(`Imported ${separatedMetadata.length} artist(s) in ${performance.now() - startTime}ms`);
-
+            // let separatedMetadata = await cacheMetadata(metadata);
         }
     } catch (e) {
         console.error(e);

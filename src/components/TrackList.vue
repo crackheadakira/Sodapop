@@ -85,7 +85,7 @@ li::before {
     font-size: 0.9rem;
     font-weight: 400;
     text-align: center;
-    margin-right: 6px;
+    margin-right: 14px;
 }
 
 li:hover::before {
@@ -93,7 +93,7 @@ li:hover::before {
     content: '\f04b';
     font: var(--fa-font-solid);
     font-size: 0.9rem;
-    margin-right: 6px;
+    margin-right: 14px;
     height: 1.2rem;
 }
 </style>
