@@ -37,30 +37,27 @@ export const useRecentlyPlayedStore = defineStore({
             }
         },
         addArtist(artist) {
-            let doesIncludeAlbum = this.recentArtists.filter(artistArray => artistArray.artist === artist.artist).length > 0;
-            let albumIndex = this.recentArtists.findIndex(artistArray => artistArray.artist === artist.artist);
+            let doesIncludeArtist = this.recentArtists.filter(artistArray => artistArray.artist === artist.artist).length > 0;
+            let artistIndex = this.recentArtists.findIndex(artistArray => artistArray.artist === artist.artist);
 
-            if (!doesIncludeAlbum && this.recentArtists.length < 30) {
+            if (!doesIncludeArtist && this.recentArtists.length < 30) {
                 this.recentArtists.unshift(artist);
 
-            } else if (this.recentArtists.length >= 30 && !doesIncludeAlbum) {
+            } else if (this.recentArtists.length >= 30 && !doesIncludeArtist) {
                 this.recentArtists.shift();
                 this.recentArtists.unshift(artist);
 
-            } else if (this.recentArtists.length >= 30 && doesIncludeAlbum) {
-                this.recentArtists.splice(albumIndex, 1);
+            } else if (this.recentArtists.length >= 30 && doesIncludeArtist) {
+                this.recentArtists.splice(artistIndex, 1);
                 this.recentArtists.unshift(artist);
 
-            } else if (doesIncludeAlbum && this.recentArtists.length < 30) {
-                this.recentArtists.splice(albumIndex, 1);
+            } else if (doesIncludeArtist && this.recentArtists.length < 30) {
+                this.recentArtists.splice(artistIndex, 1);
                 this.recentArtists.unshift(artist);
             }
         }
     },
     persist: {
         enabled: true,
-        strategies: [
-            { storage: sessionStorage, paths: ['recentTracks', 'recentAlbums', 'recentArtists'] },
-        ],
     }
 });

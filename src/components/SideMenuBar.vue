@@ -36,7 +36,7 @@ onMounted(() => {
 #sideMenu {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     min-width: 200px;
     max-width: 300px;
     height: 100%;
@@ -46,6 +46,8 @@ onMounted(() => {
     overflow: hidden;
     overflow-y: scroll;
     padding-bottom: 15px;
+    margin-left: 20px;
+    margin-right: 30px;
 }
 
 ul {

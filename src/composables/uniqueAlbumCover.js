@@ -29,19 +29,21 @@ export async function uniqueAlbumCover(data) {
     return fixedData.flat();
 }
 
-async function makeAlbumImage(track, coverExists) {
+async function makeAlbumImage(track, coverExists, resaveCover = true) {
     let newAlbumCover = path.join('artists', 'covers', `${track.artist.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')} - ${track.album.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')}.jpg`);
     let fileExists = await fs.exists(newAlbumCover);
     if (coverExists) {
         if (!fileExists) {
             let albumImage = new Uint8Array(await fs.read(track.coverPath, true));
             let blob = new Blob([albumImage], { type: "image/jpeg" });
+            if (!resaveCover) return URL.createObjectURL(blob);
             optimizeImageForSaving(blob).then(async (response) => {
                 await Neutralino.filesystem.writeBinaryFile(newAlbumCover, await response.arrayBuffer());
             }).catch(err => console.log(err));
+            return "/" + newAlbumCover;
         }
-        return "/" + newAlbumCover;
     } else if (!coverExists) {
+        if (!resaveCover) return `data:image/jpeg;base64,${track.albumCover}`;
         if (!fileExists) {
             let base64Blob = await fetch(`data:image/jpeg;base64,${track.albumCover}`).then(r => r.blob());
             optimizeImageForSaving(base64Blob).then(async (response) => {

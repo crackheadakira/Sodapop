@@ -57,3 +57,42 @@ body {
 .clickableItemInfo:hover {
   text-decoration: underline;
 }
+
+.slider {
+  background: #272727;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  border-radius: 50px;
+  border: none;
+}
+
+.slider::-webkit-progress-value {
+  background-color: rgb(168, 249, 255);
+  border-radius: 500px;
+  height: inherit;
+}
+
+.slider::-moz-range-progress {
+  background-color: rgb(168, 249, 255);
+  border-radius: 500px;
+  height: inherit;
+}
+
+.slider::-webkit-slider-thumb {
+  aspect-ratio: 1/1;
+  height: calc(inherit*2);
+  width: fit-content;
+  border-radius: 100%;
+  background: #a5a8ba;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  aspect-ratio: 1/1;
+  height: calc(inherit*2);
+  width: fit-content;
+  border-radius: 100%;
+  background: #a5a8ba;
+  cursor: pointer;
+}

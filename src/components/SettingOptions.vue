@@ -13,17 +13,34 @@ const settingOptions = $ref(settingsStore.items);
 </script>
 
 <template>
-    <div>
+    <div v-if="menuType === 'General'">
+        <h2>General</h2>
+        <ul>
+            <li>
+                <div class="settingTitle">Theme</div>
+                <div class="settingDescription">Change between light and dark theme</div>
+                <div class="settingOptions">
+                    <input type="checkbox" id="changeTheme"
+                        @change="settingsStore.setItem('darkTheme', $event.target.checked)"
+                        v-model="settingOptions.darkTheme">
+                    <label></label>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div v-if="menuType === 'Music'">
         <h1>{{ menuType }}</h1>
         <ul>
             <li>
                 <div class="settingTitle">Music Folder</div>
                 <div class="settingDescription">Select the path to your Music folder</div>
-                <div class="settingOptions">
+                <div class="settingOptions" id="musicPath">
                     <button><i class="fa-regular fa-folder-open"></i></button>
                     <div class="path">{{ settingOptions.musicFolder }}</div>
                 </div>
             </li>
+
             <li>
                 <div class="settingTitle">Resave album covers</div>
                 <div class="settingDescription">Let Sodapop resave your album covers for faster loading times. ( They
@@ -33,6 +50,29 @@ const settingOptions = $ref(settingsStore.items);
                         @change="settingsStore.setItem('resave', $event.target.checked)"
                         v-model="settingOptions.resave">
                     <label></label>
+                </div>
+            </li>
+
+            <li v-if="settingOptions.resave">
+                <div class="settingTitle">Resave quality</div>
+                <div class="settingDescription">At what quality to resave the image at. 1 being best quality.</div>
+                <div class="settingOptions">
+                    <input type="range" id="resaveQuality"
+                        @change="settingsStore.setItem('resaveQuality', $event.target.value)" min="0" max="1" step="0.1"
+                        v-model="settingOptions.resaveQuality">
+                    <label for="resaveQuality">{{ settingOptions.resaveQuality }}</label>
+                </div>
+            </li>
+
+            <li v-if="settingOptions.resave">
+                <div class="settingTitle">Resave image size</div>
+                <div class="settingDescription">At what size to resave the image at. ( Recommended 300 )</div>
+                <div class="settingOptions">
+                    <input type="range" id="resaveSize"
+                        @change="settingsStore.setItem('resaveSize', $event.target.value)" min="150" max="500" step="10"
+                        v-model="settingOptions.resaveSize">
+                    <label for="resaveSize">{{ settingOptions.resaveSize }}</label>
+                    <div id="previewResaveSize" :style="{ 'width': settingOptions.resaveSize + 'px' }"></div>
                 </div>
             </li>
         </ul>
@@ -45,7 +85,8 @@ body div {
     height: 100%;
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 button {
@@ -60,11 +101,25 @@ button:hover i {
     filter: brightness(85%);
 }
 
+#previewResaveSize {
+    background-color: #171717;
+    border: 1px solid #272727;
+    width: 100px;
+    aspect-ratio: 1/1;
+    background-image: url('/noAlbumArt.png');
+    background-size: cover;
+}
+
 .settingOptions {
     position: relative;
     display: flex;
+    justify-content: center;
+    gap: 3px;
+}
+
+#musicPath {
     flex-direction: row;
-    align-items: center;
+    gap: 0;
 }
 
 .settingTitle {
@@ -76,7 +131,7 @@ button:hover i {
     font-size: 0.9rem;
     font-weight: 400;
     color: #808080;
-    margin-bottom: 5px;
+    padding-bottom: 10px;
 }
 
 .path {
@@ -106,6 +161,11 @@ li {
     max-width: 660px;
 }
 
+input {
+    margin-right: 5px;
+    max-width: 100px;
+}
+
 input[type="checkbox"] {
     opacity: 0;
     height: 20px;
@@ -118,6 +178,7 @@ input[type="checkbox"]+label {
     height: 20px;
     width: 40px;
     border-radius: 60px;
+    padding: 10px;
     background-color: #171717;
     border: 2px solid #272727;
     transition: 300ms ease;
@@ -137,7 +198,7 @@ input[type="checkbox"]+label::before {
     border-radius: 50%;
     background-color: white;
     left: 0;
-    top: -2px;
+    top: 0px;
     transition: 200ms ease;
 }
 

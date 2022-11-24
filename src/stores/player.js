@@ -36,8 +36,5 @@ export const usePlayerStore = defineStore({
     },
     persist: {
         enabled: true,
-        strategies: [
-            { storage: sessionStorage, paths: ['isShuffling', 'isRepeating', 'currentTime', 'currentTrackLength', 'currentVolume', 'currentTrack'] },
-        ],
     }
 });
