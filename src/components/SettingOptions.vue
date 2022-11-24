@@ -1,5 +1,14 @@
 <script setup>
+import { uniqueAlbumCover } from '../composables/uniqueAlbumCover'
+import { cacheMetadata } from '../composables/cacheMetadata.js'
+import { getMetadata } from '../composables/getMetadata.js';
 import { useSettings } from '../stores/settings';
+import { path, fs } from '@empathize/framework';
+import { inject } from 'vue';
+
+const swal = inject('$swal');
+let albumInfo = $ref({ trackList: [], cover: '/noAlbumArt.png', artist: 'Unknown', album: 'Unknown', year: 'Unknown', otherAlbums: [] });
+
 const props = defineProps({
     menuType: {
         type: String,
@@ -10,6 +19,41 @@ const props = defineProps({
 const settingsStore = useSettings();
 const settingOptions = $ref(settingsStore.items);
 
+async function getAlbumImage() {
+    try {
+        let { audioFiles, musicDir } = await getMetadata();
+        settingsStore.setItem('musicFolder', musicDir);
+        if (audioFiles !== null) {
+            let otherAlbums = [...new Map(audioFiles.map(song => [song.album, song])).values()].slice(1);
+            let swalModal = swal.mixin({
+                showConfirmButton: true,
+                html: `<p>Imported ${otherAlbums.length + 1} album(s)</p>`,
+            })
+
+            swalModal.fire({
+                icon: "info",
+                title: "Successful import!",
+            })
+
+            let trackList = await uniqueAlbumCover(audioFiles);
+            /*albumInfo = trackList;
+            albumInfo.trackList = trackList;
+            albumInfo.cover = albumInfo[0].cover;
+            albumInfo.album = audioFiles[0].album
+            albumInfo.artist = audioFiles[0].artist
+            albumInfo.year = audioFiles[0].year
+            otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];*/
+            let { cachedMetadata, allAlbums } = cacheMetadata(trackList);
+            await fs.write(path.join("artists", "json", "allAlbums.json"), JSON.stringify(allAlbums));
+            for (let artist of cachedMetadata) {
+                await fs.write(path.join("artists", "json", artist.artist + '.json'), JSON.stringify(artist));
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 </script>
 
 <template>
@@ -18,12 +62,12 @@ const settingOptions = $ref(settingsStore.items);
         <ul>
             <li>
                 <div class="settingTitle">Theme</div>
-                <div class="settingDescription">Change between light and dark theme</div>
+                <div class="settingDescription">Choose your theme for Sodapop</div>
                 <div class="settingOptions">
-                    <input type="checkbox" id="changeTheme"
-                        @change="settingsStore.setItem('darkTheme', $event.target.checked)"
-                        v-model="settingOptions.darkTheme">
-                    <label></label>
+                    <select name="theme" id="themeSelect" v-model="settingOptions.theme">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
                 </div>
             </li>
         </ul>
@@ -36,7 +80,7 @@ const settingOptions = $ref(settingsStore.items);
                 <div class="settingTitle">Music Folder</div>
                 <div class="settingDescription">Select the path to your Music folder</div>
                 <div class="settingOptions" id="musicPath">
-                    <button><i class="fa-regular fa-folder-open"></i></button>
+                    <button @click="getAlbumImage()"><i class="fa-regular fa-folder-open"></i></button>
                     <div class="path">{{ settingOptions.musicFolder }}</div>
                 </div>
             </li>
@@ -59,7 +103,7 @@ const settingOptions = $ref(settingsStore.items);
                 <div class="settingOptions">
                     <input type="range" id="resaveQuality"
                         @change="settingsStore.setItem('resaveQuality', $event.target.value)" min="0" max="1" step="0.1"
-                        v-model="settingOptions.resaveQuality">
+                        v-model="settingOptions.resaveQuality" class="slider">
                     <label for="resaveQuality">{{ settingOptions.resaveQuality }}</label>
                 </div>
             </li>
@@ -70,7 +114,7 @@ const settingOptions = $ref(settingsStore.items);
                 <div class="settingOptions">
                     <input type="range" id="resaveSize"
                         @change="settingsStore.setItem('resaveSize', $event.target.value)" min="150" max="500" step="10"
-                        v-model="settingOptions.resaveSize">
+                        v-model="settingOptions.resaveSize" class="slider">
                     <label for="resaveSize">{{ settingOptions.resaveSize }}</label>
                     <div id="previewResaveSize" :style="{ 'width': settingOptions.resaveSize + 'px' }"></div>
                 </div>

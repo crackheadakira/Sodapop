@@ -17,9 +17,9 @@ export async function uniqueAlbumCover(data) {
         let matching = data.filter(res => (res.album == unique[i].album) && (res.artist == unique[i].artist));
         // Checks if the album has a cover image in the folder
         if (matching[0]?.coverPath) {
-            matching[0].cover = await makeAlbumImage(matching[0], true);
+            matching[0].cover = await makeAlbumImage(matching[0], true, true);
         } else {
-            matching[0].cover = await makeAlbumImage(matching[0], false);
+            matching[0].cover = await makeAlbumImage(matching[0], false, true);
         }
         for (let j = 0; j < matching.length; j++) {
             matching[j].cover = matching[0].cover;
@@ -29,7 +29,7 @@ export async function uniqueAlbumCover(data) {
     return fixedData.flat();
 }
 
-async function makeAlbumImage(track, coverExists, resaveCover = true) {
+async function makeAlbumImage(track, coverExists, resaveCover) {
     let newAlbumCover = path.join('artists', 'covers', `${track.artist.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')} - ${track.album.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')}.jpg`);
     let fileExists = await fs.exists(newAlbumCover);
     if (coverExists) {
@@ -40,8 +40,8 @@ async function makeAlbumImage(track, coverExists, resaveCover = true) {
             optimizeImageForSaving(blob).then(async (response) => {
                 await Neutralino.filesystem.writeBinaryFile(newAlbumCover, await response.arrayBuffer());
             }).catch(err => console.log(err));
-            return "/" + newAlbumCover;
         }
+        return "/" + newAlbumCover;
     } else if (!coverExists) {
         if (!resaveCover) return `data:image/jpeg;base64,${track.albumCover}`;
         if (!fileExists) {

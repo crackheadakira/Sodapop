@@ -4,11 +4,11 @@ export const useSettings = defineStore({
     id: 'settings',
     state: () => ({
         items: {
-            musicFolder: "/run/media/akira/2 TB/Piracy/music/",
+            musicFolder: "",
             resave: true,
             resaveQuality: 0.8,
             resaveSize: 300,
-            darkTheme: true,
+            theme: "dark",
         },
         tab: "General",
     }),

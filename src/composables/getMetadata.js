@@ -14,7 +14,7 @@ export async function getMetadata() {
             }
         }
         console.log(`Metadata took ${Math.ceil(performance.now() - timeStart)}ms`);
-        return audioFiles;
+        return { audioFiles, musicDir };
     } catch (err) {
         console.error(err);
         return null;

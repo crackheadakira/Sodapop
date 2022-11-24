@@ -4,7 +4,7 @@ import SideMenuBar from '../components/SideMenuBar.vue';
 import { useSettings } from '../stores/settings';
 
 const settingsStore = useSettings();
-const menuItems = ["General", "Music", "Appearance", "About", "Setting to test wrapping because this has an extended length"];
+const menuItems = ["General", "Music", "About"];
 const selectedMenuItem = $ref(settingsStore.tab);
 
 function itemClicked(item) {

@@ -1,10 +1,13 @@
+import { path } from '@empathize/framework';
+
 /** Seperates the metadata into an array of objects for each artist for easier handling.
  * @param {object} metadata The object containing all the metadata.
  * @returns {array}
  */
-export async function cacheMetadata(metadata) {
+export function cacheMetadata(metadata) {
     let totalArtists = [...new Map(metadata.map(track => [track.artist, track])).values()];
-    let finalResult = [];
+    let cachedMetadata = [];
+    let allAlbums = [];
 
     for (let i = 0, n = totalArtists.length; i < n; i++) {
         let matchingAlbums = metadata.filter(res => (res.artist === totalArtists[i].artist));
@@ -12,6 +15,8 @@ export async function cacheMetadata(metadata) {
         let artistResult = [];
         for (let j = 0; j < totalAlbums.length; j++) {
             let matchingTracks = matchingAlbums.filter(res => (res.album === totalAlbums[j].album));
+            let coverPath = path.join('artists', 'covers', `${totalAlbums[j].artist.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')} - ${totalAlbums[j].album.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')}.jpg`);
+            allAlbums.push({ album: totalAlbums[j].album, artist: totalArtists[i].artist, cover: coverPath, artistPath: path.join('artists', 'json', totalAlbums[j].artist + '.json') });
             artistResult.push({
                 artist: totalArtists[i].artist,
                 albumName: totalAlbums[j].album,
@@ -21,7 +26,7 @@ export async function cacheMetadata(metadata) {
                 year: totalAlbums[j].year,
             })
         }
-        finalResult.push({ artist: totalArtists[i].artist, albums: artistResult });
+        cachedMetadata.push({ artist: totalArtists[i].artist, albums: artistResult });
     }
-    return finalResult;
+    return { cachedMetadata, allAlbums };
 }

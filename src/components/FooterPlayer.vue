@@ -106,12 +106,13 @@ onMounted(() => {
             </div>
         </div>
         <div id="buttonsAndProgress">
-            <label id="trackStartLength">{{ trackDisplayTime }}
+            <div id="track">
+                <label id="trackStartLength">{{ trackDisplayTime }}</label>
                 <input ref="trackInput" type="range" :max="player_store.currentTrackLength"
                     :value=player_store.currentTime class="slider" id="musicProgressBar"><label id="trackEndLength">{{
-                            trackEndTime
+                    trackEndTime
                     }}</label>
-            </label>
+            </div>
             <div id="playerButtons">
                 <i @click="player_store.toggleShuffle()" class="fa-solid fa-shuffle fa-sm footerPlayerButton"
                     id="shuffleButton" :class="{ activePlayerButton: player_store.isShuffling }"></i>
@@ -229,13 +230,6 @@ audio {
     margin: 0 15px 0 15px;
 }
 
-#trackStartLength {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 481px;
-}
-
 #trackEndLength {
     width: 24px;
 }
@@ -247,5 +241,13 @@ label {
     -webkit-user-select: none;
     user-select: none;
     -ms-user-select: none;
+    width: 24px;
+}
+
+#track{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 505px;
 }
 </style>
