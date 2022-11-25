@@ -44,9 +44,9 @@ async function getAlbumImage() {
             albumInfo.year = audioFiles[0].year
             otherAlbums.length >= 2 ? albumInfo.otherAlbums = otherAlbums : albumInfo.otherAlbums = [];*/
             let { cachedMetadata, allAlbums } = cacheMetadata(trackList);
-            await fs.write(path.join("artists", "json", "allAlbums.json"), JSON.stringify(allAlbums));
+            await Neutralino.filesystem.writeFile(path.join("artists", "json", "allAlbums.json"), JSON.stringify(allAlbums));
             for (let artist of cachedMetadata) {
-                await fs.write(path.join("artists", "json", artist.artist + '.json'), JSON.stringify(artist));
+                await Neutralino.filesystem.writeFile(path.join("artists", "json", artist.artist + '.json'), JSON.stringify(artist));
             }
         }
     } catch (e) {

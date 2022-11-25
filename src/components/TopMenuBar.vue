@@ -39,10 +39,10 @@ onMounted(() => {
                 data-active="false">
                 Home
             </router-link>
-            <router-link tag="div" to="/album/aa" @click="setTarget($event.target)"
+            <router-link tag="div" to="/all/albums" @click="setTarget($event.target)"
                 @mouseover="changeActiveStateLook('mouseover')" id="albums"
                 @mouseout="changeActiveStateLook('mouseout')" data-active="false">Albums</router-link>
-            <router-link tag="div" to="/" @click="setTarget($event.target)"
+            <router-link tag="div" to="/album/aa" @click="setTarget($event.target)"
                 @mouseover="changeActiveStateLook('mouseover')" @mouseout="changeActiveStateLook('mouseout')"
                 id="artists" data-active="false">Artists</router-link>
         </div>

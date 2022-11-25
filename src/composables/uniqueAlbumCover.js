@@ -3,7 +3,6 @@ import { fs, path } from '@empathize/framework';
 /** Fetches one cover per album and then gives it to the rest of the songs in the album
  * @param {object} data The object containing all the metadata.
  * @returns {array} Returns an array where all the songs have their respective cover.
- * @async
  */
 export async function uniqueAlbumCover(data) {
     await checkArtistsFolder();

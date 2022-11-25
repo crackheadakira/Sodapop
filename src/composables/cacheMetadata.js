@@ -15,8 +15,7 @@ export function cacheMetadata(metadata) {
         let artistResult = [];
         for (let j = 0; j < totalAlbums.length; j++) {
             let matchingTracks = matchingAlbums.filter(res => (res.album === totalAlbums[j].album));
-            let coverPath = path.join('artists', 'covers', `${totalAlbums[j].artist.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')} - ${totalAlbums[j].album.replaceAll(/([^A-Za-z0-9\s]+)/gm, '')}.jpg`);
-            allAlbums.push({ album: totalAlbums[j].album, artist: totalArtists[i].artist, cover: coverPath, artistPath: path.join('artists', 'json', totalAlbums[j].artist + '.json') });
+            allAlbums.push({ album: totalAlbums[j].album, artist: totalArtists[i].artist, cover: totalAlbums[j].cover, artistPath: path.join('/artists', 'json', totalAlbums[j].artist + '.json') });
             artistResult.push({
                 artist: totalArtists[i].artist,
                 albumName: totalAlbums[j].album,
