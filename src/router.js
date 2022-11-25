@@ -24,4 +24,9 @@ export const routes = [
         name: 'allItems',
         component: allItems,
     },
+    {
+        path: '/artist/:artistName',
+        name: 'ArtistPage',
+        component: HomeMenu,
+    }
 ]

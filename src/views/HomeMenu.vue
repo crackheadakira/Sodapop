@@ -65,6 +65,7 @@ recently_played_store.$subscribe((mutation, state) => {
     display: flex;
     gap: 30px;
     margin: 20px;
+    height: 250px;
     border-radius: 10px;
     width: 1040px;
     max-width: 1040px;
@@ -111,8 +112,6 @@ recently_played_store.$subscribe((mutation, state) => {
     -webkit-user-select: none;
     user-select: none;
     -ms-user-select: none;
-    filter: brightness(100%);
-    transition: 250ms ease;
 }
 
 .albumCover:hover {

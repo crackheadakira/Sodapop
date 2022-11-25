@@ -1,5 +1,5 @@
 <script setup>
-import { toRefs, watch } from 'vue'
+import { watch, toRefs } from 'vue'
 
 const props = defineProps({
     albumInfo: {
@@ -13,15 +13,14 @@ const moreAlbumsExist = $ref(props.albumInfo.otherAlbums.length >= 2);
 watch(albumInfo, (newData) => {
     moreAlbumsExist = newData.otherAlbums.length >= 2;
 });
-
 </script>
 
 <template>
     <div id="albumBody">
         <div v-if="moreAlbumsExist" id="artistAlbums">
-            <div v-for="album in albumInfo.otherAlbums">
-                <img :src="album.cover" :alt="album.album">
-                <p class="clickableItemInfo">{{ album.album }}</p>
+            <div v-for="album in albumInfo.otherAlbums.filter((album, index) => album.albumName !== albumInfo.album)">
+                <img :src="album.albumCover" :alt="album.albumName">
+                <p class="clickableItemInfo">{{ album.albumName }}</p>
             </div>
         </div>
         <div v-else>
